@@ -1,0 +1,62 @@
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./helpers/db.js";
+import listing from "./routes/listing.js";
+import review from "./routes/review.js";
+import user from "./routes/user.js";
+import User from "./models/user.js";
+import session from "express-session";
+import cookieParser from "cookie-parser";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+
+dotenv.config();
+
+const app = express();
+
+app.use(cookieParser(process.env.SESSION_SECRET_CODE));
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const sessionOptions = {
+  secret: process.env.SESSION_SECRET_CODE,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httOnly: true,
+  },
+};
+
+app.use(session(sessionOptions));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+connectDB();
+
+// passport.use(new LocalStrategy(User.authenticate()));
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
+
+app.get("/", (req, res) => {
+  res.send("aPi is running ....");
+});
+
+app.get("/greet", (req, res) => {
+  const { name = "anon" } = req.query;
+  req.session.name = name;
+  res.send(req.session.name);
+  console.log(req.session);
+});
+
+app.use("/api/listings", listing);
+app.use("/api", review);
+app.use("/user", user);
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, console.log(`Server is listening on ${PORT}`));
