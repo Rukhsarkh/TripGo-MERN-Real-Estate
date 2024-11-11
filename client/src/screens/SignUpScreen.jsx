@@ -26,13 +26,12 @@ const SignUpScreen = () => {
         "http://localhost:5000/user/sign-up",
         formData
       );
-      setMessages("Sign up successful !");
-      setFormData({
-        username: "",
-        email: "",
-        password: "",
-      });
-      // Navigate("/");
+      setFormData({ username: "", email: "", password: "" });
+
+      if (response.data.success) {
+        setMessages("Sign up successful! Please verify your email.");
+        Navigate("/verify", { state: { email: formData.email } });
+      }
       console.log(response);
     } catch (error) {
       console.error(error);
@@ -59,12 +58,12 @@ const SignUpScreen = () => {
                 <input
                   type="text"
                   id="username"
-                  placeholder="Alina Shah"
+                  placeholder="Yusuf Shah"
                   required
                   name="username"
                   value={formData.username}
                   onChange={handleChange}
-                  className="border-2 rounded-lg p-2"
+                  className="border-b-2 p-2 text-xl"
                 />
               </div>
 
@@ -73,12 +72,12 @@ const SignUpScreen = () => {
                 <input
                   type="email"
                   id="email"
-                  placeholder="alina@gmail.com"
+                  placeholder="yusuf@gmail.com"
                   required
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="border-2 rounded-lg p-2"
+                  className="border-b-2 p-2 text-xl"
                 />
               </div>
 
@@ -92,15 +91,12 @@ const SignUpScreen = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="border-2 rounded-lg p-2"
+                  className="border-b-2 p-2 text-xl"
                 />
               </div>
 
               <div className="flex flex-col gap-4 justify-center items-center">
-                <button
-                  className="bg-primary mt-4 rounded-lg p-2 font-bold w-full text-white"
-                  type="submit"
-                >
+                <button className="btn-essential" type="submit">
                   Signup
                 </button>
                 <p>

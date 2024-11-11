@@ -13,7 +13,7 @@ const LoginScreen = () => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.value]: e.target.name,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -21,8 +21,15 @@ const LoginScreen = () => {
     e.preventDefault();
 
     try {
-      const repsonse = await axios.get("http://localhost:5000/user/login");
-      setMessages("Login Successful");
+      const response = await axios.post(
+        "http://localhost:5000/user/login",
+        formData
+      );
+      setFormData({ email: "", password: "" });
+
+      setMessages(response.data.message);
+
+      Navigate("/");
     } catch (error) {
       console.error(error);
       setMessages(error.response?.data?.message || "Login failed! Try again");
@@ -32,25 +39,28 @@ const LoginScreen = () => {
     <div className="h-screen w-screen overflow-hidden">
       <div className="max-container mx-auto px-4">
         <MainScreen title={"Login"}>
-          {/* {message && (
-          <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">
-            {message}
-          </div>
-        )} */}
+          {messages && (
+            <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">
+              {messages}
+            </div>
+          )}
 
           <div className="flex flex-row justify-between items-center relative">
-            <form className="flex flex-col gap-6 mt-8 border-4 rounded-3xl  p-4 w-1/2 z-10">
+            <form
+              className="flex flex-col gap-6 mt-8 border-4 rounded-3xl  p-4 w-1/2 z-10"
+              onSubmit={handleSubmit}
+            >
               <div className="flex flex-col gap-4">
-                <label htmlFor="username">Email</label>
+                <label htmlFor="email">Email</label>
                 <input
                   type="email"
                   id="email"
-                  placeholder="alina@gmail.com"
+                  placeholder="yusuf@gmail.com"
                   required
                   name="email"
-                  // value={formData.password}
-                  // onChange={handleChange}
-                  className="border-2 rounded-lg p-2"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="border-b-2 p-2 text-xl"
                 />
               </div>
 
@@ -62,17 +72,14 @@ const LoginScreen = () => {
                   placeholder="Enter password"
                   required
                   name="password"
-                  // value={formData.password}
-                  // onChange={handleChange}
-                  className="border-2 rounded-lg p-2"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="border-b-2 p-2 text-xl"
                 />
               </div>
 
               <div className="flex flex-col gap-4 justify-center items-center">
-                <button
-                  className="bg-primary mt-4 rounded-lg p-2 font-bold w-full text-white"
-                  type="submit"
-                >
+                <button className="btn-essential" type="submit">
                   Login
                 </button>
                 <p>

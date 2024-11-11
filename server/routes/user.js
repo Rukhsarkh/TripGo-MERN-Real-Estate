@@ -5,6 +5,84 @@ import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import rateLimit from "express-rate-limit";
 
+//test - route
+router.get("/get-hello", (req, res) => {
+  return res.json({ message: "hello" });
+});
+
+router.get("/get-profile", async (req, res) => {
+  try {
+    console.log("Session:", req.session);
+    console.log("User object:", req.user);
+    console.log("Session user ID:", req.session.userID);
+
+    // First try to get user from passport's req.user
+    let userId = req.user?._id;
+
+    // If not available, try session
+    if (!userId && req.session.userID) {
+      userId = req.session.userID;
+    }
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "User isn't authenticated",
+        session: req.session,
+        user: req.user,
+      });
+    }
+
+    const user = await User.findById(userId).select("username email");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    console.log("Found user:", user);
+
+    res.json({
+      username: user.username,
+      email: user.email,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching profile, server Error !" });
+  }
+});
+
+// routes/user.js
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Set session data
+    req.session.userID = user._id;
+
+    // Explicitly save the session
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json({ message: "Error saving session" });
+      }
+
+      // Send response after session is saved
+      res.json({
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      });
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Error logging in" });
+  }
+});
+
 // Rate limiter for signup attempts
 const signupLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
@@ -72,17 +150,16 @@ router.post("/sign-up", signupLimiter, async (req, res) => {
 
       // Update existing unverified user
       const hashedPassword = await bcrypt.hash(password, 12);
-      await User.updateOne(
+      await User.findOneAndUpdate(
         { email },
         {
-          $set: {
-            username,
-            password: hashedPassword,
-            verifyCode,
-            verifyCodeExpiration: otpExpiration,
-            updatedAt: new Date(),
-          },
-        }
+          username,
+          password: hashedPassword,
+          verifyCode,
+          verifyCodeExpiration: otpExpiration,
+          updatedAt: new Date(),
+        },
+        { runValidators: true }
       );
     } else {
       // Create new user
@@ -102,8 +179,8 @@ router.post("/sign-up", signupLimiter, async (req, res) => {
     try {
       await sendOTPEmail({
         to: email,
-        username,
-        verifyCode,
+        username: username,
+        verifyCode: verifyCode,
       });
     } catch (emailError) {
       // Log email error but don't fail the request
@@ -140,81 +217,152 @@ router.post("/sign-up", signupLimiter, async (req, res) => {
   }
 });
 
+// Verify email route
+router.post("/verify-email", async (req, res, next) => {
+  try {
+    const { email, verificationCode } = req.body;
+
+    if (!email || !verificationCode) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and verification code are required",
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Email already verified",
+      });
+    }
+
+    if (user.verifyCode !== verificationCode) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid verification code",
+      });
+    }
+
+    if (new Date() > user.verifyCodeExpiration) {
+      return res.status(400).json({
+        success: false,
+        message: "Verification code has expired",
+      });
+    }
+
+    user.isVerified = true;
+    await user.save();
+
+    req.login(user, (err) => {
+      if (err) {
+        res.json({
+          success: false,
+          message: "auto-login failed",
+          error: err.message,
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Email verified and Logged in successful",
+        user: {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+        },
+      });
+    });
+  } catch (error) {
+    console.error("Email verification error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred during verification",
+    });
+  }
+});
+
+router.post("/resend-code", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Email already verified",
+      });
+    }
+
+    const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiration = new Date(Date.now() + 3600000); // 1 hour from now
+
+    await User.findOneAndUpdate(
+      { _id: user._id },
+      {
+        verifyCode,
+        verifyCodeExpiration: otpExpiration,
+      },
+      { runValidators: true }
+    );
+
+    await sendOTPEmail({
+      to: email,
+      username: user.username,
+      verifyCode: verifyCode,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "New verification code sent successfully",
+    });
+  } catch (error) {
+    console.error("Resend code error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while resending the code",
+    });
+  }
+});
+
+router.post("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Logout failed",
+        error: err.message,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "You are logged out",
+    });
+  });
+});
+
 export default router;
-//test-route
-// router.get("/get-hello", (req, res) => {
-//   return res.json({ message: "hello" });
-// });
-
-// router.post("/sign-up", async (req, res) => {
-//   try {
-//     const { username, email, password } = await req.body;
-
-//     const existingVerifiedUserByUsername = await User.findOne({
-//       username,
-//       isVerified: true,
-//     });
-
-//     if (existingVerifiedUserByUsername) {
-//       return res.json({
-//         success: false,
-//         message: "User already exists",
-//       });
-//     }
-
-//     const existingUserByEmail = await User.findOne({ email });
-//     let verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-//     if (existingUserByEmail) {
-//       if (existingUserByEmail.isVerified) {
-//         return res.json({
-//           success: false,
-//           message: "User already exists with this email",
-//         });
-//       } else {
-//         const hashedPassword = await bcrypt.hash(password, 10);
-//         existingUserByEmail.password = hashedPassword;
-//         existingUserByEmail.verifyCode = verifyCode;
-//         existingUserByEmail.verifyCodeExpiration = new Date(
-//           Date.now() + 3600000
-//         );
-//         await existingUserByEmail.save();
-//       }
-//     } else {
-//       const hashedPassword = await bcrypt.hash(password, 10);
-//       const otpExpiration = new Date();
-//       otpExpiration.setHours(otpExpiration.getHours() + 1);
-
-//       const newUser = new User({
-//         username,
-//         email,
-//         password: hashedPassword,
-//         verifyCode,
-//         verifyCodeExpiration: otpExpiration,
-//         isVerified: false,
-//       });
-
-//       await newUser.save();
-//     }
-
-//     const sendEmail = await sendOTPEmail({
-//       to: email,
-//       username,
-//       verifyCode,
-//     });
-
-//     res.status(200).json({
-//       success: true,
-//       message: "OTP sent successfully",
-//       email: email,
-//       otp: verifyCode,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// });
-
-// export default router;

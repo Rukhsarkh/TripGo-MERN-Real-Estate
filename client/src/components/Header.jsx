@@ -1,8 +1,24 @@
 import { CompassIcon, Globe, MenuIcon, Search, User } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 const UserOptions = ({ navigate }) => {
+  const [messages, setMessages] = useState("");
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/user/logout",
+        {}
+      );
+      if (response.status === 200) {
+        setMessages(response.data.message);
+        console.log("Logged out successfully");
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   return (
     <div className="absolute right-0 top-12 bg-white shadow-lg rounded-lg p-4 w-60">
       <div className="flex flex-col gap-2">
@@ -42,6 +58,7 @@ const UserOptions = ({ navigate }) => {
             navigate("/login");
           }}
         >
+          {messages && <p>{messages}</p>}
           Login
         </button>
       </div>
@@ -64,9 +81,7 @@ const UserOptions = ({ navigate }) => {
         </button>
         <button
           className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
-          onClick={() => {
-            navigate("/login");
-          }}
+          onClick={handleLogout}
         >
           LogOut
         </button>

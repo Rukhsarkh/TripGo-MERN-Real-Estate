@@ -8,3 +8,9 @@
     margin: 0 auto;
   }
 }
+
+@layer components {
+  .btn-essential {
+    @apply bg-primary mt-4 rounded-lg p-2 font-bold w-full text-white active:translate-y-0.5 transition-all duration-300 ease-in-out;
+  }
+}

@@ -5,6 +5,7 @@ import NewListingForm from "./screens/newListingForm";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ShowListing from "./screens/ShowListing";
 import SignUpScreen from "./screens/SignUpScreen";
+import VerificationScreen from "./screens/VerificationScreen";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<LoginScreen />} />
         <Route path="sign-up" element={<SignUpScreen />} />
         <Route path="/show-List/:id" element={<ShowListing />} />
+        <Route path="/verify" element={<VerificationScreen />} />;
       </Routes>
     </Router>
   );

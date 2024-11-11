@@ -3,12 +3,23 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import MainScreen from "../components/MainScreen";
 import { useNavigate } from "react-router-dom";
+
+// const api = axios.create({
+//   baseURL: "http://localhost:5000",
+//   withCredentials: true,
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// });
+
 const Listings = () => {
   const navigate = useNavigate();
   const [listings, setListings] = useState([]);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     fetchListings();
+    fetchUserProfile();
   }, []);
   const fetchListings = async () => {
     try {
@@ -21,9 +32,23 @@ const Listings = () => {
     }
   };
 
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/user/get-profile"
+      );
+      setUsername(response.data.username);
+    } catch (error) {
+      console.error("Error fetching User profile", error);
+      if (error.response?.status === 401) {
+        navigate("/");
+      }
+    }
+  };
+
   return (
     <section className="max-container">
-      <MainScreen title={"Welcome Rukhsar . . . ."}>
+      <MainScreen title={username ? `Welcome ${username}` : "Welcome ....."}>
         <div className="flex flex-wrap">
           {listings.map((listing) => (
             <div

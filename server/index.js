@@ -9,38 +9,79 @@ import User from "./models/user.js";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-
+import MongoStore from "connect-mongo";
 dotenv.config();
-
-const app = express();
-
-app.use(cookieParser(process.env.SESSION_SECRET_CODE));
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-const sessionOptions = {
-  secret: process.env.SESSION_SECRET_CODE,
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    httOnly: true,
-  },
-};
-
-app.use(session(sessionOptions));
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 connectDB();
 
-// passport.use(new LocalStrategy(User.authenticate()));
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const mongoStore = MongoStore.create({
+  mongoUrl: process.env.MONGO_URI,
+  crypto: {
+    secret: process.env.SECRET,
+  },
+  touchAfter: 24 * 3600,
+});
+
+mongoStore.on("error", (error) => {
+  console.log("ERROR in MONGO SESSION STORE", error);
+});
+
+const sessionOptions = {
+  name: "connect.sid",
+  secret: process.env.SESSION_SECRET_CODE,
+  resave: true,
+  saveUninitialized: true,
+  store: mongoStore,
+  cookie: {
+    httpOnly: true,
+    secure: false, // set to true in production with HTTPS
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: "/",
+  },
+  rolling: true,
+};
+
+app.use(cookieParser(process.env.SESSION_SECRET_CODE));
+app.use(session(sessionOptions));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id).select(
+      "-password -verifyCode -verifyCodeExpiration"
+    );
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
+});
+
+app.use((req, res, next) => {
+  console.log("Session ID:", req.sessionID);
+  console.log("Session:", req.session);
+  console.log("Cookies:", req.cookies);
+  next();
+});
 
 app.get("/", (req, res) => {
   res.send("aPi is running ....");

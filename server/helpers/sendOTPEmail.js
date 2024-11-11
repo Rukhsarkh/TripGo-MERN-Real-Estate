@@ -6,7 +6,7 @@ import { dirname, join } from "path";
 
 const __filenamme = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filenamme);
-const sendOTPEmail = async ({ to, username, otp }) => {
+const sendOTPEmail = async ({ to, username, verifyCode }) => {
   try {
     const templatePath = join(
       __dirname,
@@ -14,7 +14,7 @@ const sendOTPEmail = async ({ to, username, otp }) => {
     );
     const htmlContent = await ejs.renderFile(templatePath, {
       username,
-      otp,
+      otp: verifyCode,
       logoUrl:
         process.env.COMPANY_LOGO_URL ||
         "https://t3.ftcdn.net/jpg/03/19/15/80/360_F_319158029_4JKXm8ZJy7BaaciR3SB6ZuGxL1mVGPRA.jpg",
@@ -27,6 +27,8 @@ const sendOTPEmail = async ({ to, username, otp }) => {
       subject: "Verify Your Email",
       html: htmlContent,
     });
+
+    console.log(verifyCode);
   } catch (error) {
     console.error("Error sending email:", error);
     throw error;
