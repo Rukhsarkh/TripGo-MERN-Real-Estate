@@ -4,10 +4,64 @@ import sendOTPEmail from "../helpers/sendOTPEmail.js";
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import rateLimit from "express-rate-limit";
+import passport from "passport";
 
 //test - route
 router.get("/get-hello", (req, res) => {
   return res.json({ message: "hello" });
+});
+
+router.get("/auth", (req, res) => {
+  if (req.isAuthenticated) {
+    res.json({
+      isAuthenticated: true,
+      username: req.user.username,
+    });
+  } else {
+    res.json({ isAuthenticated: false });
+  }
+});
+
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ message: info.message });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res
+        .status(200)
+        .json({ message: "Login successful", user: user.toJSON() });
+    });
+  })(req, res, next);
+});
+
+router.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+
+      // Clear the session cookie
+      res.clearCookie("connect.sid");
+
+      // Send response after cookie and session are cleared
+      res.status(200).json({
+        success: true,
+        message: "You are logged out!",
+      });
+    });
+  });
 });
 
 router.get("/get-profile", async (req, res) => {
@@ -49,43 +103,8 @@ router.get("/get-profile", async (req, res) => {
   }
 });
 
-// routes/user.js
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
-
-    // Set session data
-    req.session.userID = user._id;
-
-    // Explicitly save the session
-    req.session.save((err) => {
-      if (err) {
-        console.error("Session save error:", err);
-        return res.status(500).json({ message: "Error saving session" });
-      }
-
-      // Send response after session is saved
-      res.json({
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-      });
-    });
-  } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ message: "Error logging in" });
-  }
-});
-
-// Rate limiter for signup attempts
 const signupLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
+  windowMs: 60 * 60 * 1000,
   max: 5, // 5 requests per hour per IP
   message: {
     success: false,
@@ -346,23 +365,6 @@ router.post("/resend-code", async (req, res) => {
       message: "An error occurred while resending the code",
     });
   }
-});
-
-router.post("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        message: "Logout failed",
-        error: err.message,
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "You are logged out",
-    });
-  });
 });
 
 export default router;

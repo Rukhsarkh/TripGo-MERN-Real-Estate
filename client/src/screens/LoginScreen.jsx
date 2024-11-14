@@ -23,7 +23,13 @@ const LoginScreen = () => {
     try {
       const response = await axios.post(
         "http://localhost:5000/user/login",
-        formData
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
       setFormData({ email: "", password: "" });
 

@@ -4,18 +4,11 @@ import axios from "axios";
 import MainScreen from "../components/MainScreen";
 import { useNavigate } from "react-router-dom";
 
-// const api = axios.create({
-//   baseURL: "http://localhost:5000",
-//   withCredentials: true,
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// });
-
 const Listings = () => {
   const navigate = useNavigate();
   const [listings, setListings] = useState([]);
   const [username, setUsername] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     fetchListings();
@@ -35,20 +28,25 @@ const Listings = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/user/get-profile"
+        "http://localhost:5000/user/get-profile",
+        { withCredentials: true }
       );
+
+      console.log(response.data);
       setUsername(response.data.username);
+      setIsLoggedIn(true);
     } catch (error) {
-      console.error("Error fetching User profile", error);
-      if (error.response?.status === 401) {
-        navigate("/");
-      }
+      console.error(error);
+      setUsername("");
+      setIsLoggedIn(false);
     }
   };
 
   return (
     <section className="max-container">
-      <MainScreen title={username ? `Welcome ${username}` : "Welcome ....."}>
+      <MainScreen
+        title={isLoggedIn ? `Welcome @${username}` : "Welcome........"}
+      >
         <div className="flex flex-wrap">
           {listings.map((listing) => (
             <div

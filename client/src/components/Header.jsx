@@ -1,91 +1,100 @@
 import { CompassIcon, Globe, MenuIcon, Search, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 const UserOptions = ({ navigate }) => {
-  const [messages, setMessages] = useState("");
+  const { isLoggedIn, setIsLoggedIn, isLoading, setIsloading } = useAuth();
+
   const handleLogout = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/user/logout",
-        {}
-      );
+      const response = await axios.get("http://localhost:5000/user/logout", {
+        withCredentials: true,
+      });
       if (response.status === 200) {
-        setMessages(response.data.message);
         console.log("Logged out successfully");
       }
+      setIsLoggedIn(false);
+      navigate("/login");
     } catch (error) {
       console.error("Error logging out:", error);
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="absolute right-0 top-12 bg-white shadow-lg rounded-lg p-4 w-60">
+        <div className="flex justify-center items-center h-20">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="absolute right-0 top-12 bg-white shadow-lg rounded-lg p-4 w-60">
-      <div className="flex flex-col gap-2">
-        <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-          Messages
-        </button>
-        <button
-          className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
-          onClick={() => {
-            navigate("/login");
-          }}
-        >
-          Trips
-        </button>
-        <button
-          className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
-          onClick={() => {
-            navigate("/login");
-          }}
-        >
-          WishList
-        </button>
-      </div>
-      <hr />
-      <div className="flex flex-col gap-2">
-        <button
-          className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
-          onClick={() => {
-            navigate("/sign-up");
-          }}
-        >
-          Signup
-        </button>
-        <button
-          className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
-          onClick={() => {
-            navigate("/login");
-          }}
-        >
-          {messages && <p>{messages}</p>}
-          Login
-        </button>
-      </div>
-      <hr />
-      <div className="flex flex-col gap-2">
-        <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-          Airbnb Your Home
-        </button>
-        <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-          Host Your Experience
-        </button>
-        <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-          Account
-        </button>
-      </div>
-      <hr />
-      <div className="flex flex-col gap-2">
-        <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-          Help Center
-        </button>
-        <button
-          className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
-          onClick={handleLogout}
-        >
-          LogOut
-        </button>
-      </div>
+      {isLoggedIn ? (
+        <div>
+          <div className="flex flex-col gap-2">
+            <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+              Messages
+            </button>
+            <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+              Trips
+            </button>
+            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+              WishList
+            </button>
+          </div>
+          <hr />
+          <div className="flex flex-col gap-2">
+            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+              Account
+            </button>
+            <button
+              className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
+              onClick={handleLogout}
+            >
+              LogOut
+            </button>
+          </div>
+          <hr />
+        </div>
+      ) : (
+        <div>
+          <div className="flex flex-col gap-2">
+            <button
+              className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
+              onClick={() => {
+                navigate("/sign-up");
+              }}
+            >
+              Signup
+            </button>
+            <button
+              className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Login
+            </button>
+          </div>
+          <hr />
+          <div className="flex flex-col gap-2">
+            <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+              Airbnb Your Home
+            </button>
+            <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+              Host Your Experience
+            </button>
+            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+              Help Center
+            </button>
+          </div>
+          <hr />
+        </div>
+      )}
     </div>
   );
 };
