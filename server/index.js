@@ -91,20 +91,6 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   console.log("Session ID:", req.sessionID);
-//   console.log("Session:", req.session);
-//   console.log("Cookies:", req.cookies);
-//   next();
-// });
-
-// app.get("/greet", (req, res) => {
-//   const { name = "anon" } = req.query;
-//   req.session.name = name;
-//   res.send(req.session.name);
-//   console.log(req.session);
-// });
-
 app.get("/", (req, res) => {
   res.send("aPi is running ....");
 });

@@ -3,21 +3,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-const UserOptions = ({ navigate }) => {
-  const { isLoggedIn, setIsLoggedIn, isLoading, setIsloading } = useAuth();
+const UserOptions = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn, isLoading, logout } = useAuth();
 
   const handleLogout = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/user/logout", {
-        withCredentials: true,
-      });
-      if (response.status === 200) {
-        console.log("Logged out successfully");
-      }
-      setIsLoggedIn(false);
+    const success = await logout();
+    if (success) {
       navigate("/login");
-    } catch (error) {
-      console.error("Error logging out:", error);
     }
   };
 
@@ -36,10 +29,10 @@ const UserOptions = ({ navigate }) => {
       {isLoggedIn ? (
         <div>
           <div className="flex flex-col gap-2">
-            <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
               Messages
             </button>
-            <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
               Trips
             </button>
             <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
@@ -52,7 +45,7 @@ const UserOptions = ({ navigate }) => {
               Account
             </button>
             <button
-              className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
+              className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
               onClick={handleLogout}
             >
               LogOut
@@ -65,27 +58,23 @@ const UserOptions = ({ navigate }) => {
           <div className="flex flex-col gap-2">
             <button
               className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
-              onClick={() => {
-                navigate("/sign-up");
-              }}
+              onClick={() => navigate("/sign-up")}
             >
               Signup
             </button>
             <button
               className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
-              onClick={() => {
-                navigate("/login");
-              }}
+              onClick={() => navigate("/login")}
             >
               Login
             </button>
           </div>
           <hr />
           <div className="flex flex-col gap-2">
-            <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
               Airbnb Your Home
             </button>
-            <button className=" hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
               Host Your Experience
             </button>
             <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
