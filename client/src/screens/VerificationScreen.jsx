@@ -83,9 +83,13 @@ const VerificationScreen = () => {
         {
           email,
           verificationCode: code,
+        },
+        {
+          withCredentials: true,
         }
       );
 
+      console.log(response.data);
       setMessage(response.data.message);
       if (response.data.success) {
         setTimeout(() => {

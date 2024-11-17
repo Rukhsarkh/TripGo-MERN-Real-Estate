@@ -26,16 +26,11 @@ const LoginScreen = () => {
         formData,
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
         }
       );
       setFormData({ email: "", password: "" });
 
-      setMessages(response.data.message);
-
-      Navigate("/");
+      alert(response.data.message);
     } catch (error) {
       console.error(error);
       setMessages(error.response?.data?.message || "Login failed! Try again");

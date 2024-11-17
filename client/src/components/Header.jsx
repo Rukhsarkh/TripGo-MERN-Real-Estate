@@ -1,11 +1,9 @@
 import { CompassIcon, Globe, MenuIcon, Search, User } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-const UserOptions = () => {
+const UserOptions = ({ isLoggedIn, isLoading, logout }) => {
   const navigate = useNavigate();
-  const { isLoggedIn, isLoading, logout } = useAuth();
 
   const handleLogout = async () => {
     const success = await logout();
@@ -13,16 +11,6 @@ const UserOptions = () => {
       navigate("/login");
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="absolute right-0 top-12 bg-white shadow-lg rounded-lg p-4 w-60">
-        <div className="flex justify-center items-center h-20">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="absolute right-0 top-12 bg-white shadow-lg rounded-lg p-4 w-60">
@@ -91,6 +79,7 @@ const UserOptions = () => {
 const Header = () => {
   const navigate = useNavigate();
   const [toggle, setToggle] = useState(false);
+  const { isLoggedIn, isLoading, logout } = useAuth();
   const handleOnClick = () => {
     setToggle((prevToggle) => !prevToggle);
   };
@@ -123,7 +112,9 @@ const Header = () => {
         <div className="flex flex-row gap-5 text-lg text-thin">
           <div
             onClick={() => {
-              navigate("/new-form");
+              isLoggedIn
+                ? navigate("/new-form")
+                : alert("You need to login first !");
             }}
             className="cursor-pointer inline-flex items-center gap-2"
           >
@@ -143,7 +134,14 @@ const Header = () => {
               />
             </div>
 
-            {toggle && <UserOptions navigate={navigate} />}
+            {toggle && (
+              <UserOptions
+                navigate={navigate}
+                isLoading={isLoading}
+                logout={logout}
+                isLoggedIn={isLoggedIn}
+              />
+            )}
           </div>
         </div>
       </div>

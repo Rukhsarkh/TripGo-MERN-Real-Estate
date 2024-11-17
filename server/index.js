@@ -30,8 +30,9 @@ app.use(
       collectionName: "sessions",
     }),
     cookie: {
-      expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
     },
   })
 );
@@ -64,20 +65,6 @@ passport.use(
     }
   )
 );
-//Persists user data inside session
-passport.serializeUser(async (user, done) => {
-  done(null, user.id);
-});
-
-//Fetches session details using session id
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
-});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -91,8 +78,29 @@ app.use(
   })
 );
 
+//Persists user data inside session
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+//Fetches session details using session id
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
+});
+
 app.get("/", (req, res) => {
   res.send("aPi is running ....");
+});
+
+app.use((req, res, next) => {
+  console.log("Session-Id", req.session.id);
+  console.log("Session", req.session);
+  next();
 });
 
 app.use("/api/listings", listing);

@@ -5,27 +5,50 @@ import multer from "multer";
 import dotenv from "dotenv";
 import storage from "../CloudConfig.js";
 const upload = multer({ storage });
+import { isLoggedIn } from "../middleware/auth.js";
 
 if (process.env.NODE_ENV != "production") {
   dotenv.config();
 }
 
-router.post("/create", upload.single("image"), async (req, res) => {
+router.post("/create", isLoggedIn, upload.single("image"), async (req, res) => {
   try {
-    const url = req.file.path;
-    const filename = req.file.filename;
-    const newListing = new Listing(req.body); //how the data in req.body will be saved according to model coz frontend has no reference of model and data is coming not according to the model fields but according to the form fields
-    newListing.image = { url, filename };
+    if (!req.user) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    const newListing = new Listing({
+      ...req.body,
+      author: req.user._id,
+      image: req.file
+        ? {
+            url: req.file.path,
+            filename: req.file.filename,
+          }
+        : null,
+    });
+
     const savedListing = await newListing.save();
-    res.status(201).json(savedListing);
+
+    // Populate the author details after saving
+    const populatedListing = await Listing.findById(savedListing._id).populate(
+      "author",
+      "username email"
+    );
+
+    res.status(201).json(populatedListing);
   } catch (error) {
+    console.error("Error creating listing:", error);
     res.status(500).json({ message: error.message });
   }
 });
 
 router.get("/posts", async (req, res) => {
   try {
-    const allListings = await Listing.find();
+    const allListings = await Listing.find().populate(
+      "author",
+      "username email"
+    );
     res.json(allListings);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -35,7 +58,16 @@ router.get("/posts", async (req, res) => {
 router.get("/posts/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate(
+      "author",
+      "username email"
+    );
+
+    if (!listing) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Listing not found" });
+    }
     res.json(listing);
   } catch (error) {
     console.error("Error fetching this listing", error);

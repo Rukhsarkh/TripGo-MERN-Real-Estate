@@ -236,7 +236,6 @@ router.post("/sign-up", signupLimiter, async (req, res) => {
   }
 });
 
-// Verify email route
 router.post("/verify-email", async (req, res, next) => {
   try {
     const { email, verificationCode } = req.body;
@@ -251,7 +250,7 @@ router.post("/verify-email", async (req, res, next) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
         message: "User not found",
       });
@@ -305,6 +304,7 @@ router.post("/verify-email", async (req, res, next) => {
     return res.status(500).json({
       success: false,
       message: "An error occurred during verification",
+      error: error.message,
     });
   }
 });

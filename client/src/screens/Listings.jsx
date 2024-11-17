@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import MainScreen from "../components/MainScreen";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../context/AuthContext";
 const Listings = () => {
   const navigate = useNavigate();
   const [listings, setListings] = useState([]);
   const [username, setUsername] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
 
   useEffect(() => {
     fetchListings();
@@ -34,18 +34,15 @@ const Listings = () => {
 
       console.log(response.data);
       setUsername(response.data.username);
-      setIsLoggedIn(true);
     } catch (error) {
       console.error(error);
-      setUsername("");
-      setIsLoggedIn(false);
     }
   };
 
   return (
     <section className="max-container">
       <MainScreen
-        title={isLoggedIn ? `Welcome @${username}` : "Welcome........"}
+        title={isLoggedIn ? `Welcome ${username} !` : "Welcome........"}
       >
         <div className="flex flex-wrap">
           {listings.map((listing) => (

@@ -16,10 +16,10 @@ const ShowListing = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:5000/api/listings/posts/${id}`
+          `http://localhost:5000/api/listings/posts/${id}`,
+          { withCredentials: true }
         );
         setListing(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -36,8 +36,27 @@ const ShowListing = () => {
     return <MainScreen title="Loading ...."></MainScreen>;
   }
 
+  if (!listing) {
+    return (
+      <div className="h-screen w-screen overflow-hidden">
+        <MainScreen title="Not Found">
+          <div className="text-6xl text-gray-300 font-thin mt-5">
+            The requested Listing could not be found
+            <img
+              src="../public/ListNotFoundError.svg"
+              className="w-[70vh] h-[70vh]"
+            />
+          </div>
+        </MainScreen>
+      </div>
+    );
+  }
+
   return (
     <MainScreen title={listing.title}>
+      <p className="text-2xl">
+        Listed by : {listing.author?.username || "unknown"}
+      </p>
       <div className="mt-4 flex items-center gap-40">
         <img
           src={listing.image?.url || image.url}

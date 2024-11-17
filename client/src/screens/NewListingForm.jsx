@@ -14,6 +14,7 @@ const NewListingForm = () => {
   });
 
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -23,15 +24,19 @@ const NewListingForm = () => {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setError("");
+
     const formDataToSend = new FormData();
     formDataToSend.append("title", formData.title);
     formDataToSend.append("description", formData.description);
     formDataToSend.append("price", formData.price);
     formDataToSend.append("location", formData.location);
     formDataToSend.append("country", formData.country);
-    formDataToSend.append("image", formData.image); // Append the file
-
-    e.preventDefault();
+    if (formData.image) {
+      formDataToSend.append("image", formData.image);
+    }
 
     try {
       const response = await axios.post(
@@ -41,20 +46,35 @@ const NewListingForm = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials: true,
         }
       );
-      setMessage("Listing successfully created !");
+
+      console.log("Created listing:", response.data);
+      setMessage(
+        `Listing successfully created by ${response.data.author.username}!`
+      );
       setFormData({
         title: "",
         description: "",
+        image: null,
         price: "",
         location: "",
         country: "",
       });
       navigate("/");
     } catch (error) {
-      console.log(error);
-      setMessage("Error Creating Listing, Please try again !");
+      console.error("Error details:", error.response?.data || error.message);
+      if (error.response?.status === 401) {
+        setError("Please log in to create a listing");
+        // Optionally redirect to login page
+        // navigate("/login");
+      } else {
+        setError(
+          error.response?.data?.message ||
+            "Error creating listing. Please try again!"
+        );
+      }
     }
   };
 
