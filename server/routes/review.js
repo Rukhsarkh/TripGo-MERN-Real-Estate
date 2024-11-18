@@ -3,6 +3,7 @@ import review from "../models/review.js";
 import Listing from "../models/listing.js";
 const router = express.Router({ mergeParams: true });
 import { isLoggedIn } from "../middleware/auth.js";
+import PropertyReviewAnalyzer from "../helpers/PropertyReviewAnalyzer.js";
 
 router.post("/:listingId/create", isLoggedIn, async (req, res) => {
   try {
@@ -62,5 +63,40 @@ router.delete(
     }
   }
 );
+
+router.get("/:listingId/analyzeListing", async (req, res) => {
+  const analyzer = new PropertyReviewAnalyzer();
+  
+  try {
+    const listingId = req.params.listingId;
+    const listing = await Listing.findById(listingId).populate("reviews");
+    
+    if (!listing) {
+      return res.status(404).json({ error: "Listing not found" });
+    }
+
+    if (!listing.reviews || listing.reviews.length === 0) {
+      return res.status(200).json({
+        totalReviews: 0,
+        averageRating: 0,
+        sentimentDistribution: {
+          positive: 0,
+          neutral: 0,
+          negative: 0
+        },
+        detailedResults: []
+      });
+    }
+    
+    const analysis = await analyzer.analyzePropertyReviews(listing.reviews);
+    res.json(analysis);
+  } catch (error) {
+    console.error("Error in analysis:", error);
+    res.status(500).json({ 
+      error: "Analysis failed", 
+      details: error.message 
+    });
+  }
+});
 
 export default router;

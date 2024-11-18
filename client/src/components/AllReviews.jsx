@@ -1,6 +1,7 @@
 import axios from "axios";
 import { StarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import SentimentAnalysis from "./SentimentAnalysis";
 
 const AllReviews = ({ listingId }) => {
   const [allReviews, setAllReviews] = useState([]);
@@ -44,7 +45,7 @@ const AllReviews = ({ listingId }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="animate-pulse">Loading...</div>;
   }
 
   return (
@@ -93,9 +94,10 @@ const AllReviews = ({ listingId }) => {
           </div>
         ))}
       </div>
-      <hr className="h-96 bg-black w-[0.1px]" />
       <div className="w-1/2 flex justify-center">
-        <h1 className="font-bold text-3xl">Sentimental Summary</h1>
+        <h1 className="font-bold text-3xl">
+          <SentimentAnalysis listingId={listingId} />
+        </h1>
       </div>
     </div>
   );
