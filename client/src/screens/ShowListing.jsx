@@ -55,10 +55,7 @@ const ShowListing = () => {
         <MainScreen title="Not Found">
           <div className="text-6xl text-gray-300 font-thin mt-5">
             The requested Listing could not be found
-            <img
-              src="../public/ListNotFoundError.svg"
-              className="w-[70vh] h-[70vh]"
-            />
+            <img src="../ListNotFoundError.svg" className="w-[70vh] h-[70vh]" />
           </div>
         </MainScreen>
       </div>

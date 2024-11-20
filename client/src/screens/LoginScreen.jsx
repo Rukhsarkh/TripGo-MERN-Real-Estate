@@ -2,8 +2,11 @@ import { useState } from "react";
 import MainScreen from "../components/MainScreen";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 const LoginScreen = () => {
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
+  const { setIsLoggedIn } = useAuth(); // Add this
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -28,14 +31,31 @@ const LoginScreen = () => {
           withCredentials: true,
         }
       );
+      setIsLoggedIn(true); // Add this
       setFormData({ email: "", password: "" });
 
-      alert(response.data.message);
+      // Get saved path immediately after successful login
+      const savedPath = localStorage.getItem("returnTo");
+      console.log("Saved path:", savedPath); // Debug log
+
+      // Clear it right after getting it
+      localStorage.removeItem("returnTo");
+
+      // Alert before navigation
+      console.log(response.data.message);
+
+      // Navigate directly here instead of separate function
+      if (savedPath) {
+        navigate(savedPath); // Use lowercase 'navigate'
+      } else {
+        navigate("/"); // Use lowercase 'navigate'
+      }
     } catch (error) {
       console.error(error);
       setMessages(error.response?.data?.message || "Login failed! Try again");
     }
   };
+
   return (
     <div className="h-screen w-screen overflow-hidden">
       <div className="max-container mx-auto px-4">
@@ -88,7 +108,7 @@ const LoginScreen = () => {
                   <a
                     className="leading-5 text-md text-primary hover:underline cursor-default"
                     onClick={() => {
-                      Navigate("/Sign-up");
+                      navigate("/Sign-up");
                     }}
                   >
                     SignUp

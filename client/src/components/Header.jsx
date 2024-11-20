@@ -111,12 +111,16 @@ const Header = () => {
 
         <div className="flex flex-row gap-5 text-lg text-thin">
           <div
-            onClick={() => {
-              isLoggedIn
-                ? navigate("/new-form")
-                : alert("You need to login first !");
-            }}
             className="cursor-pointer inline-flex items-center gap-2"
+            onClick={() => {
+              // Check authentication before navigating
+              if (!isLoggedIn) {
+                localStorage.setItem("returnTo", "/new-form");
+                navigate("/login");
+              } else {
+                navigate("/new-form");
+              }
+            }}
           >
             <p>TripGo Your Home</p>
             <Globe />
