@@ -43,6 +43,16 @@ router.post("/create", isLoggedIn, upload.single("image"), async (req, res) => {
   }
 });
 
+router.delete("/deleteList/:id", isLoggedIn, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Listing.findByIdAndDelete(id);
+    res.status(200).json({ message: "Listing deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting listing:", error);
+  }
+});
+
 router.get("/posts", async (req, res) => {
   try {
     const allListings = await Listing.find().populate(

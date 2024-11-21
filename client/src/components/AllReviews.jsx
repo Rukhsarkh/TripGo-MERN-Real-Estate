@@ -2,12 +2,22 @@ import axios from "axios";
 import { StarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import SentimentAnalysis from "./SentimentAnalysis";
-
+import { useAuth } from "../context/AuthContext";
+import { all } from "three/webgpu";
 const AllReviews = ({ listingId }) => {
   const [allReviews, setAllReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { checkAuthStatus } = useAuth();
+  const [userId, setUserId] = useState(null);
 
+  // checkAuthStatus() is an async function that returns a Promise, so you can't
+  // directly destructure the userId like that. Instead, you'll need to use await or .then() to resolve the Promise.
   useEffect(() => {
+    const fetchUserId = async () => {
+      const id = await checkAuthStatus();
+      setUserId(id);
+    };
+    fetchUserId();
     fetchReviews();
   }, [listingId]);
 
@@ -48,6 +58,14 @@ const AllReviews = ({ listingId }) => {
     return <div className="animate-pulse">Loading...</div>;
   }
 
+  if (allReviews.length === 0) {
+    return (
+      <p className="text-2xl text-gray-400 font-thin mt-5">
+        No Reviews Available. Be the First to Leave a Review
+      </p>
+    );
+  }
+
   return (
     <div className="flex flex-row">
       <div className="flex flex-wrap gap-4 w-1/2">
@@ -63,14 +81,16 @@ const AllReviews = ({ listingId }) => {
                   @{item.author?.username || "Deleted User"}
                 </p>
               </div>
-              <button
-                className="btn-essential w-1/3"
-                onClick={() => {
-                  handleReviewDelete(item._id);
-                }}
-              >
-                Delete
-              </button>
+              {item.author?._id === userId && (
+                <button
+                  className="btn-essential w-1/3"
+                  onClick={() => {
+                    handleReviewDelete(item._id);
+                  }}
+                >
+                  Delete
+                </button>
+              )}
             </div>
 
             <hr />

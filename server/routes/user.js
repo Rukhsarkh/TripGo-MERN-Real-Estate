@@ -14,6 +14,8 @@ router.get("/get-hello", (req, res) => {
 router.get("/auth", (req, res) => {
   if (req.isAuthenticated) {
     res.json({
+      id: req.user.id,
+      email: req.user.email,
       isAuthenticated: true,
       username: req.user.username,
     });

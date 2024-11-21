@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
         withCredentials: true,
       });
       setIsLoggedIn(response.data.isAuthenticated);
+      return response.data.id;
     } catch (error) {
       console.error("Error checking auth status", error);
       setIsLoggedIn(false);

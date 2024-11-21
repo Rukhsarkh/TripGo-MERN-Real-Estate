@@ -7,22 +7,31 @@ import ShowListing from "./screens/ShowListing";
 import SignUpScreen from "./screens/SignUpScreen";
 import VerificationScreen from "./screens/VerificationScreen";
 import { AuthProvider } from "./context/AuthContext";
-
+import ProtectedRoute from "./context/ProtectedRoute";
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Listings />} />
-          <Route path="/new-form" element={<NewListingForm />} />
-          <Route path="/login" element={<LoginScreen />} />
-          <Route path="sign-up" element={<SignUpScreen />} />
-          <Route path="/show-List/:id" element={<ShowListing />} />
-          <Route path="/verify" element={<VerificationScreen />} />;
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <div>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Listings />} />
+            <Route path="/login" element={<LoginScreen />} />
+            <Route path="/Sign-up" element={<SignUpScreen />} />
+            <Route path="/verify" element={<VerificationScreen />} />
+            <Route
+              path="/new-form"
+              element={
+                <ProtectedRoute>
+                  <NewListingForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/show-List/:id" element={<ShowListing />} />
+          </Routes>
+        </div>
+      </AuthProvider>
+    </Router>
   );
 }
 
