@@ -7,7 +7,6 @@ import ShowListing from "./screens/ShowListing";
 import SignUpScreen from "./screens/SignUpScreen";
 import VerificationScreen from "./screens/VerificationScreen";
 import { AuthProvider } from "./context/AuthContext";
-import ProtectedRoute from "./context/ProtectedRoute";
 function App() {
   return (
     <Router>
@@ -19,14 +18,7 @@ function App() {
             <Route path="/login" element={<LoginScreen />} />
             <Route path="/Sign-up" element={<SignUpScreen />} />
             <Route path="/verify" element={<VerificationScreen />} />
-            <Route
-              path="/new-form"
-              element={
-                <ProtectedRoute>
-                  <NewListingForm />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/new-form" element={<NewListingForm />} />
             <Route path="/show-List/:id" element={<ShowListing />} />
           </Routes>
         </div>
