@@ -51,7 +51,9 @@ const Listings = () => {
         title={isLoggedIn ? `Welcome ${username} !` : "Welcome........"}
       >
         {isLoading ? (
-          <div className="text-6xl text-primary font-thin">Loading...</div>
+          <div className="text-6xl text-gray-400 font-thin mt-4 p-3">
+            Loading...
+          </div>
         ) : listings.length === 0 ? (
           <div className="text-6xl text-gray-300 font-thin mt-5">
             No Listing Available Yet !
