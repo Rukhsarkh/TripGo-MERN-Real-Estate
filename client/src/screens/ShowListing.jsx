@@ -5,13 +5,22 @@ import { useEffect, useState } from "react";
 import { ArrowRightCircle, StarIcon } from "lucide-react";
 import LeaveReview from "../components/LeaveReview";
 import AllReviews from "../components/AllReviews";
+import { useAuth } from "../context/AuthContext";
 
 const ShowListing = () => {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { checkAuthStatus } = useAuth();
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    const fetchUserId = async () => {
+      const id = await checkAuthStatus();
+      setUserId(id);
+    };
+
+    fetchUserId();
     const fetchDetails = async () => {
       try {
         setLoading(true);
@@ -19,6 +28,7 @@ const ShowListing = () => {
           `http://localhost:5000/api/listings/posts/${id}`,
           { withCredentials: true }
         );
+        console.log(response.data);
         setListing(response.data);
       } catch (error) {
         console.error(error);
@@ -73,17 +83,19 @@ const ShowListing = () => {
             src={listing.image?.url || image.url}
             className="w-[800px] h-[500px] rounded-3xl"
           />
-          <div className="flex flex-row gap-4">
-            <button
-              onClick={handleDeleteList}
-              className="rounded-xl p-2 bg-primary text-white text-lg h-10 w-20 btn-essential"
-            >
-              Delete
-            </button>
-            <button className="rounded-xl p-2 bg-black text-white text-lg h-10 w-20 btn-essential">
-              Edit
-            </button>
-          </div>
+          {listing.author?._id === userId && (
+            <div className="flex flex-row gap-4">
+              <button
+                onClick={handleDeleteList}
+                className="rounded-xl p-2 bg-primary text-white text-lg h-10 w-20 btn-essential"
+              >
+                Delete
+              </button>
+              <button className="rounded-xl p-2 bg-black text-white text-lg h-10 w-20 btn-essential">
+                Edit
+              </button>
+            </div>
+          )}
         </div>
         <div className="text-gray-400 text-3xl inline-flex items-center gap-3 hover:scale-110 hover:cursor-pointer transition-transform duration-800 border-2 border-black p-4">
           <p>More images</p>

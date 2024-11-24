@@ -48,7 +48,7 @@ const LoginScreen = () => {
       if (savedPath) {
         navigate(savedPath); // Use lowercase 'navigate'
       } else {
-        navigate("/"); // Use lowercase 'navigate'
+        navigate("/Explore"); // Use lowercase 'navigate'
       }
     } catch (error) {
       console.error(error);

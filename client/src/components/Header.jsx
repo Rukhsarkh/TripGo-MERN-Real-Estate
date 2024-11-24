@@ -2,6 +2,8 @@ import { CompassIcon, Globe, MenuIcon, Search, User } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useWindowsize } from "../hooks/useWindowSize";
+
 const UserOptions = ({ isLoggedIn, isLoading, logout }) => {
   const navigate = useNavigate();
 
@@ -80,73 +82,108 @@ const Header = () => {
   const navigate = useNavigate();
   const [toggle, setToggle] = useState(false);
   const { isLoggedIn, isLoading, logout } = useAuth();
+  const [expandable, setExpandable] = useState(false);
   const handleOnClick = () => {
     setToggle((prevToggle) => !prevToggle);
   };
 
+  const { width } = useWindowsize();
+  const isMid = width < 1024;
+  const isLarge = width >= 1024;
+
   return (
-    <header className="w-full fixed mx-auto top-0 left-0 right-0 min-h-[10vh] bg-gradient-to-b from-white to-gray-100 z-10">
-      <div className="max-container flex flex-row justify-between items-center mt-2">
-        <div
-          className="inline-flex items-center gap-1 cursor-pointer"
-          onClick={() => {
-            navigate("/");
-          }}
-        >
-          <CompassIcon className="text-primary cursor-pointer" />
-          <p className="cursor-pointer font-thin text-xl">TripGO</p>
+    <header className="w-full fixed mx-auto top-0 left-0 right-0 sm:min-h-[5vh] z-10 max-container">
+      <div className="flex flex-row max-lg:flex-col max-lg:gap-14 justify-between items-center p-3">
+        <div className="max-lg:flex max-lg:flex-row max-lg:justify-between max-lg:w-full">
+          <div className="inline-flex items-center gap-1 cursor-pointer">
+            <CompassIcon
+              className="text-gray-400 cursor-pointer max-lg:size-6"
+              size={32}
+            />
+            <button
+              className="cursor-pointer font-thin max-sm:text-xl text-2xl text-gray-400 hover:text-4xl transition-all duration-300 ease-in"
+              onClick={() => navigate("/")}
+            >
+              TripGO
+            </button>
+          </div>
+          {isMid && (
+            <div className="relative">
+              <div
+                className="relative w-20 h-10 bg-inherit rounded-3xl inline-flex items-center gap-3 p-2 cursor-pointer shadow-gray-400 shadow-inner active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:shadow-lg hover:shadow-gray-400"
+                onClick={handleOnClick}
+              >
+                <MenuIcon size={32} className="text-gray-300" />
+                <User className=" text-white" size={32} />
+              </div>
+
+              {toggle && (
+                <UserOptions
+                  navigate={navigate}
+                  isLoading={isLoading}
+                  logout={logout}
+                  isLoggedIn={isLoggedIn}
+                />
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-row gap-2">
           <input
             type="text"
             placeholder="Search Destinations"
-            className="rounded-3xl border-2 p-2 text-lg"
+            className={`max-lg:border-b-2 p-2 text-lg bg-inherit w-44 border-gray-300 transition-all duration-200 ease-in focus:outline-none ${
+              expandable ? "w-72" : "w-44"
+            }`}
+            onFocus={() => setExpandable(true)}
+            onBlur={() => setExpandable(false)}
           />
-          <div className="rounded-3xl py-2 px-4 bg-primary text-white text-lg gap-2 inline-flex">
-            <Search />
-            <p>Search</p>
+          <div className="bg-inherit text-white gap-2 inline-flex items-center">
+            <Search className="cursor-pointer size-5 lg:size-6" />
+            <p className="text-xl">Search</p>
           </div>
         </div>
 
-        <div className="flex flex-row gap-5 text-lg text-thin">
-          <div
-            className="cursor-pointer inline-flex items-center gap-2"
-            onClick={() => {
-              // Check authentication before navigating
-              if (!isLoggedIn) {
-                localStorage.setItem("returnTo", "/new-form");
-                navigate("/login");
-              } else {
-                navigate("/new-form");
-              }
-            }}
-          >
-            <p>TripGo Your Home</p>
-            <Globe />
-          </div>
+        <div>
+          {isLarge && (
+            <div className="flex flex-row max-md:gap-10 gap-4 text-lg text-thin">
+              <div
+                className="relative w-20 h-10 bg-inherit rounded-3xl inline-flex items-center gap-3 p-2 cursor-pointer shadow-gray-400 shadow-inner active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:shadow-lg hover:shadow-gray-400"
+                onClick={handleOnClick}
+              >
+                <MenuIcon size={32} className="text-gray-300" />
+                <User className=" text-white" size={32} />
+              </div>
 
-          <div className="relative">
-            <div
-              className="relative w-20 h-10 bg-white rounded-3xl inline-flex items-center gap-3 p-1 cursor-pointer shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300"
-              onClick={handleOnClick}
-            >
-              <MenuIcon />
-              <User
-                className="border-2 rounded-full bg-primary text-white"
-                size={32}
-              />
+              {toggle && (
+                <UserOptions
+                  navigate={navigate}
+                  isLoading={isLoading}
+                  logout={logout}
+                  isLoggedIn={isLoggedIn}
+                />
+              )}
+
+              <div
+                className="cursor-pointer inline-flex items-center gap-2 font-thin text-xl lg:text-2xl max-lg:rounded-3xl max-lg:p-3 max-lg:bg-white/50"
+                onClick={() => {
+                  // Check authentication before navigating
+                  if (!isLoggedIn) {
+                    localStorage.setItem("returnTo", "/new-form");
+                    navigate("/login");
+                  } else {
+                    navigate("/new-form");
+                  }
+                }}
+              >
+                <p className="lg:text-gray-400 hover:text-3xl transition-all duration-300 ease-in ">
+                  TripGo YOUR HOME
+                </p>
+                <Globe />
+              </div>
             </div>
-
-            {toggle && (
-              <UserOptions
-                navigate={navigate}
-                isLoading={isLoading}
-                logout={logout}
-                isLoggedIn={isLoggedIn}
-              />
-            )}
-          </div>
+          )}
         </div>
       </div>
     </header>
