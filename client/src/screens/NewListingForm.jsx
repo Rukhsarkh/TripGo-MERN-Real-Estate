@@ -2,6 +2,7 @@ import { useState } from "react";
 import MainScreen from "../components/MainScreen";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 const NewListingForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -67,8 +68,6 @@ const NewListingForm = () => {
       console.error("Error details:", error.response?.data || error.message);
       if (error.response?.status === 401) {
         setError("Please log in to create a listing");
-        // Optionally redirect to login page
-        // navigate("/login");
       } else {
         setError(
           error.response?.data?.message ||
@@ -79,111 +78,149 @@ const NewListingForm = () => {
   };
 
   return (
-    <div className="max-container ml-96">
-      <MainScreen title={"List Your Property"}>
-        {message && (
-          <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">
-            {message}
-          </div>
-        )}
+    <div className="min-h-screen bg-gray-50 pt-14 sm:pt-8 md:pt-0">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <MainScreen title={"List Your Property"}>
+          <div className="bg-white rounded-xl shadow-2xl shadow-gray-500 p-6 sm:p-8 mt-4">
+            {message && (
+              <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">
+                {message}
+              </div>
+            )}
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+                {error}
+              </div>
+            )}
 
-        <form className="flex flex-col gap-4 mt-5" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-4">
-            <label htmlFor="title">Title</label>
-            <input
-              type="text"
-              id="title"
-              placeholder="title"
-              required
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="border-2 rounded-lg p-2 w-2/3"
-            />
-          </div>
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div className="space-y-2">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Title
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  placeholder="Enter title"
+                  required
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
+                />
+              </div>
 
-          <div className="flex flex-col gap-4">
-            <label htmlFor="description">Description</label>
-            <textarea
-              type="text"
-              id="description"
-              placeholder="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="border-2 rounded-lg p-2 w-2/3"
-            />
-          </div>
+              <div className="space-y-2">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Description
+                </label>
+                <textarea
+                  id="description"
+                  placeholder="Enter description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows="4"
+                  className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
+                />
+              </div>
 
-          <div className="flex flex-col gap-4">
-            <label htmlFor="image">Image</label>
-            <input
-              type="file"
-              id="image"
-              placeholder="image url"
-              required
-              name="image"
-              onChange={(e) => {
-                setFormData({
-                  ...formData,
-                  image: e.target.files[0],
-                });
-              }}
-              accept="image/*"
-              className="border-2 rounded-lg p-2 w-2/3"
-            />
-          </div>
+              <div className="space-y-2">
+                <label
+                  htmlFor="image"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Image
+                </label>
+                <input
+                  type="file"
+                  id="image"
+                  required
+                  name="image"
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      image: e.target.files[0],
+                    });
+                  }}
+                  accept="image/*"
+                  className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
+                />
+              </div>
 
-          <div className="grid grid-cols-3 mr-96 gap-2">
-            <div className="col-span-1 grid items-center gap-4">
-              <label>Price</label>
-              <input
-                type="Number"
-                id="price"
-                placeholder="price"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                className="border-2 rounded-lg p-2"
-              />
-            </div>
-            <div className="col-span-2 grid items-center gap-4">
-              <label>Country</label>
-              <input
-                type="text"
-                id="country"
-                placeholder="enter country"
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                className="border-2 rounded-lg p-2 w-full"
-              />
-            </div>
-          </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label
+                    htmlFor="price"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Price
+                  </label>
+                  <input
+                    type="number"
+                    id="price"
+                    placeholder="Enter price"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="country"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Country
+                  </label>
+                  <input
+                    type="text"
+                    id="country"
+                    placeholder="Enter country"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
+                  />
+                </div>
+              </div>
 
-          <div className="flex flex-col gap-4">
-            <label htmlFor="location">Location</label>
-            <input
-              type="text"
-              id="location"
-              placeholder="location"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              className="border-2 rounded-lg p-2 w-2/3"
-            />
-          </div>
+              <div className="space-y-2">
+                <label
+                  htmlFor="location"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Location
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  placeholder="Enter location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
+                />
+              </div>
 
-          <div>
-            <button
-              className="bg-primary mt-4 rounded-lg p-2 font-bold w-20 text-white"
-              type="submit"
-            >
-              Add
-            </button>
+              <div>
+                <button
+                  className="w-full sm:w-auto px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors"
+                  type="submit"
+                >
+                  Add Listing
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
-      </MainScreen>
+        </MainScreen>
+      </div>
     </div>
   );
 };

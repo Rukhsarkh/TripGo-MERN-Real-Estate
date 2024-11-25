@@ -2,15 +2,16 @@ import { useState } from "react";
 import MainScreen from "../components/MainScreen";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 const SignUpScreen = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
-
   const [message, setMessages] = useState("");
   const Navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -38,88 +39,108 @@ const SignUpScreen = () => {
       setMessages(error.response?.data?.message || "Error signing up");
     }
   };
+
   return (
-    <div className="h-screen w-screen overflow-hidden">
-      <div className="max-container mx-auto px-4">
-        <MainScreen title={"SignUp"}>
-          {message && (
-            <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">
-              {message}
-            </div>
-          )}
+    <div className="lg:h-screen lg:w-screen lg:overflow-hidden flex items-center justify-center bg-[radial-gradient(circle_at_50%_120%,rgba(239,68,68,0.1),rgba(156,163,175,0.1))] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-between">
+        <div className="w-full lg:w-1/2 max-w-md">
+          <MainScreen title="Sign Up">
+            <div className="bg-white rounded-xl shadow-2xl px-8 py-4 mt-2 shadow-gray-500">
+              {message && (
+                <div className="mb-6 p-4 rounded-md bg-green-100 text-green-700">
+                  {message}
+                </div>
+              )}
 
-          <div className="flex flex-row justify-between items-center relative">
-            <form
-              className="flex flex-col gap-6 mt-8 border-4 rounded-3xl p-4 w-1/2 z-50"
-              onSubmit={handleSubmit}
-            >
-              <div className="flex flex-col gap-4">
-                <label htmlFor="username">Username</label>
-                <input
-                  type="text"
-                  id="username"
-                  placeholder="Yusuf Shah"
-                  required
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="border-b-2 p-2 text-xl"
-                />
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="yusuf@gmail.com"
-                  required
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="border-b-2 p-2 text-xl"
-                />
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  placeholder="Enter password"
-                  required
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="border-b-2 p-2 text-xl"
-                />
-              </div>
-
-              <div className="flex flex-col gap-4 justify-center items-center">
-                <button className="btn-essential" type="submit">
-                  Signup
-                </button>
-                <p>
-                  Already have an account ?{"  "}
-                  <a
-                    className="leading-5 text-md text-primary hover:underline cursor-default"
-                    onClick={() => {
-                      Navigate("/login");
-                    }}
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div>
+                  <label
+                    htmlFor="username"
+                    className="block text-sm font-medium text-gray-700"
                   >
-                    Login
-                  </a>
-                </p>
-              </div>
-            </form>
-            <div>
-              <img
-                src="../Signup.svg"
-                className="p-2 absolute -top-28 -right-96 h-[700px] w-full"
-              />
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter your name"
+                    required
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    className="mt-1 block w-full border-b-2 border-gray-300 py-2 text-gray-900 placeholder-gray-400 focus:border-primary focus:outline-none text-lg transition-colors duration-200"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="yusuf@example.com"
+                    required
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="mt-1 block w-full border-b-2 border-gray-300 py-2 text-gray-900 placeholder-gray-400 focus:border-primary focus:outline-none text-lg transition-colors duration-200"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="Create a password"
+                    required
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="mt-1 block w-full border-b-2 border-gray-300 py-2 text-gray-900 placeholder-gray-400 focus:border-primary focus:outline-none text-lg transition-colors duration-200"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <button
+                    type="submit"
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200"
+                  >
+                    Sign Up
+                  </button>
+
+                  <p className="text-center text-sm text-gray-600">
+                    Already have an account?{" "}
+                    <button
+                      type="button"
+                      onClick={() => Navigate("/login")}
+                      className="text-primary hover:text-primary/80 font-medium focus:outline-none transition-colors duration-200"
+                    >
+                      Log in
+                    </button>
+                  </p>
+                </div>
+              </form>
             </div>
-          </div>
-        </MainScreen>
+          </MainScreen>
+        </div>
+
+        <div className="hidden lg:block w-1/2 pl-12">
+          <img
+            src="../Signup.svg"
+            alt="Signup Illustration"
+            className="w-full lg:scale-125 max-w-lg mx-auto mt-20"
+          />
+        </div>
       </div>
     </div>
   );

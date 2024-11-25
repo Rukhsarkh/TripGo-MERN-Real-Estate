@@ -1,11 +1,12 @@
 import { useState } from "react";
-import MainScreen from "../components/MainScreen";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import MainScreen from "../components/MainScreen";
+
 const LoginScreen = () => {
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useAuth(); // Add this
+  const { setIsLoggedIn } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -31,24 +32,17 @@ const LoginScreen = () => {
           withCredentials: true,
         }
       );
-      setIsLoggedIn(true); // Add this
+      setIsLoggedIn(true);
       setFormData({ email: "", password: "" });
 
-      // Get saved path immediately after successful login
       const savedPath = localStorage.getItem("returnTo");
-      console.log("Saved path:", savedPath); // Debug log
-
-      // Clear it right after getting it
       localStorage.removeItem("returnTo");
-
-      // Alert before navigation
       console.log(response.data.message);
 
-      // Navigate directly here instead of separate function
       if (savedPath) {
-        navigate(savedPath); // Use lowercase 'navigate'
+        navigate(savedPath);
       } else {
-        navigate("/Explore"); // Use lowercase 'navigate'
+        navigate("/Explore");
       }
     } catch (error) {
       console.error(error);
@@ -57,74 +51,87 @@ const LoginScreen = () => {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden">
-      <div className="max-container mx-auto px-4">
-        <MainScreen title={"Login"}>
-          {messages && (
-            <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">
-              {messages}
-            </div>
-          )}
+    <div className="h-screen w-screen overflow-hidden flex items-center justify-center bg-[radial-gradient(circle_at_50%_120%,rgba(239,68,68,0.1),rgba(156,163,175,0.1))] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-between">
+        <div className="w-full lg:w-1/2 max-w-md">
+          <MainScreen title="Login">
+            <div className="bg-white rounded-xl shadow-2xl px-8 py-4 mt-2 shadow-gray-500">
+              {messages && (
+                <div className="mb-6 p-4 rounded-md bg-green-100 text-green-700">
+                  {messages}
+                </div>
+              )}
 
-          <div className="flex flex-row justify-between items-center relative">
-            <form
-              className="flex flex-col gap-6 mt-8 border-4 rounded-3xl  p-4 w-1/2 z-10"
-              onSubmit={handleSubmit}
-            >
-              <div className="flex flex-col gap-4">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="yusuf@gmail.com"
-                  required
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="border-b-2 p-2 text-xl"
-                />
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  placeholder="Enter password"
-                  required
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="border-b-2 p-2 text-xl"
-                />
-              </div>
-
-              <div className="flex flex-col gap-4 justify-center items-center">
-                <button className="btn-essential" type="submit">
-                  Login
-                </button>
-                <p>
-                  Not a member yet ?{"  "}
-                  <a
-                    className="leading-5 text-md text-primary hover:underline cursor-default"
-                    onClick={() => {
-                      navigate("/Sign-up");
-                    }}
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
                   >
-                    SignUp
-                  </a>
-                </p>
-              </div>
-            </form>
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="yusuf@example.com"
+                    required
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="mt-1 block w-full border-b-2 border-gray-300 py-2 text-gray-900 placeholder-gray-400 focus:border-primary focus:outline-none text-lg transition-colors duration-200"
+                  />
+                </div>
 
-            <div>
-              <img
-                src="../Login.svg"
-                className="p-2 absolute -top-36 -right-80 h-[770px] w-full"
-              />
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="mt-1 block w-full border-b-2 border-gray-300 py-2 text-gray-900 placeholder-gray-400 focus:border-primary focus:outline-none text-lg transition-colors duration-200"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <button
+                    type="submit"
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200"
+                  >
+                    Login
+                  </button>
+
+                  <p className="text-center text-sm text-gray-600">
+                    Don't have an account?{" "}
+                    <button
+                      type="button"
+                      onClick={() => navigate("/Sign-up")}
+                      className="text-primary hover:text-primary/80 font-medium focus:outline-none transition-colors duration-200"
+                    >
+                      Sign up
+                    </button>
+                  </p>
+                </div>
+              </form>
             </div>
-          </div>
-        </MainScreen>
+          </MainScreen>
+        </div>
+
+        <div className="hidden lg:block w-1/2 pl-12">
+          <img
+            src="../Login.svg"
+            alt="Login Illustration"
+            className="w-full lg:scale-150 max-w-lg mx-auto mt-24"
+          />
+        </div>
       </div>
     </div>
   );

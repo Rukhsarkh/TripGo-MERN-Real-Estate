@@ -18,12 +18,11 @@ const VerificationScreen = () => {
   const email = location.state?.email;
 
   const handleChange = (index, value) => {
-    if (value.length > 1) return; // Prevent multiple digits
+    if (value.length > 1) return;
     const newCode = [...verificationCode];
     newCode[index] = value;
     setVerificationCode(newCode);
 
-    // Auto-focus next input
     if (value && index < 5) {
       const nextInput = document.querySelector(
         `input[name="code-${index + 1}"]`
@@ -105,7 +104,7 @@ const VerificationScreen = () => {
 
   if (!email) {
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Invalid Access</h2>
           <p className="mb-4">Please sign up first to verify your email.</p>
@@ -121,10 +120,10 @@ const VerificationScreen = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 bg-[radial-gradient(circle_at_50%_120%,rgba(239,68,68,0.1),rgba(156,163,175,0.1))]">
+      <div className="max-w-md w-full mx-4 space-y-8 p-2 py-4 sm:p-8 bg-white rounded-xl shadow-2xl mt-48 xl:m-20 shadow-gray-400">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
             Verify Your Email
           </h2>
           <p className="mt-2 text-sm text-gray-600">
@@ -154,7 +153,7 @@ const VerificationScreen = () => {
                 value={digit}
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-12 h-12 text-center text-xl font-semibold border-2 rounded-lg focus:border-primary focus:outline-none"
+                className="w-10 h-10 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-semibold border-2 rounded-lg focus:border-primary focus:outline-none"
                 maxLength={1}
                 pattern="[0-9]"
                 inputMode="numeric"

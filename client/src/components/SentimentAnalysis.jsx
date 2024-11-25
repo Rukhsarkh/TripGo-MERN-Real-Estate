@@ -3,9 +3,9 @@ import axios from "axios";
 import { AlertCircle, CheckCircle, MinusCircle } from "lucide-react";
 
 const SentimentBar = ({ percentage, colorClass }) => (
-  <div className="w-full h-4 bg-gray-200 overflow-hidden rounded-md">
+  <div className="w-full h-3 md:h-4 bg-gray-200 overflow-hidden rounded-md">
     <div
-      className={`h-full ${colorClass} rounded-md`}
+      className={`h-full ${colorClass} rounded-md transition-all duration-500 ease-in-out`}
       style={{ width: `${percentage}%` }}
     ></div>
   </div>
@@ -52,11 +52,11 @@ const SentimentAnalysis = ({ listingId }) => {
   }, [listingId]);
 
   const SentimentCard = ({ title, percentage, icon: Icon, colorClass }) => (
-    <div className="space-y-2 p-2">
-      <div className="flex items-center justify-between gap-60">
-        <div className="flex items-center gap-3">
+    <div className="space-y-2 p-2 md:p-3 lg:p-4 bg-white rounded-lg hover:shadow-sm transition-shadow">
+      <div className="flex items-center justify-between gap-2 md:gap-4 lg:gap-6">
+        <div className="flex items-center gap-2 md:gap-3">
           <Icon
-            className={`w-5 h-5 ${
+            className={`w-4 h-4 md:w-5 md:h-5 ${
               colorClass.includes("green")
                 ? "text-green-600"
                 : colorClass.includes("yellow")
@@ -64,9 +64,9 @@ const SentimentAnalysis = ({ listingId }) => {
                 : "text-red-600"
             }`}
           />
-          <span className="font-medium">{title}</span>
+          <span className="text-sm md:text-base font-medium">{title}</span>
         </div>
-        <span className="font-bold text-xl">{percentage}%</span>
+        <span className="font-bold text-lg md:text-xl">{percentage}%</span>
       </div>
       <SentimentBar
         percentage={percentage}
@@ -83,37 +83,47 @@ const SentimentAnalysis = ({ listingId }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-6">
-        <div className="animate-pulse text-lg">Analyzing reviews...</div>
+      <div className="flex items-center justify-center p-4 md:p-6">
+        <div className="animate-pulse text-base md:text-lg text-gray-600">
+          Analyzing reviews...
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-4 text-red-600 flex items-center gap-2">
-        <AlertCircle className="w-5 h-5" />
+      <div className="p-3 md:p-4 text-red-600 flex items-center gap-2 text-sm md:text-base">
+        <AlertCircle className="w-4 h-4 md:w-5 md:h-5" />
         <span>Error: {error}</span>
       </div>
     );
   }
 
   if (!analysis) {
-    return <div className="p-4 text-gray-600">No analysis available</div>;
+    return (
+      <div className="p-3 md:p-4 text-gray-600 text-sm md:text-base">
+        No analysis available
+      </div>
+    );
   }
 
   return (
-    <div className="w-full p-6 space-y-6">
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold mb-4">Review Analysis →</h2>{" "}
-        <p className="text-sm">Based on {analysis.totalReviews} reviews</p>
-        <div className="text-lg mb-1 text-primary">
-          Average Rating: {analysis.averageRating} ⭐
+    <div className="w-full max-w-3xl p-3 md:p-4 lg:p-6 space-y-4 md:space-y-6">
+      <div className="space-y-2 md:space-y-4">
+        <h2 className="text-lg md:text-2xl font-bold">Review Analysis →</h2>
+        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+          <p className="text-xs md:text-sm text-gray-600">
+            Based on {analysis.totalReviews} reviews
+          </p>
+          <div className="text-base md:text-lg text-primary font-medium">
+            Average Rating: {analysis.averageRating} ⭐
+          </div>
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div className="space-y-6">
+      <div className="space-y-3 md:space-y-4">
+        <div className="space-y-3 md:space-y-4">
           <SentimentCard
             title="Positive"
             percentage={analysis.sentimentDistribution.positive}

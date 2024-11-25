@@ -4,6 +4,7 @@ import axios from "axios";
 import MainScreen from "../components/MainScreen";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+
 const Listings = () => {
   const navigate = useNavigate();
   const [listings, setListings] = useState([]);
@@ -15,6 +16,7 @@ const Listings = () => {
     fetchListings();
     fetchUserProfile();
   }, []);
+
   const fetchListings = async () => {
     try {
       setIsLoading(true);
@@ -37,7 +39,6 @@ const Listings = () => {
         "http://localhost:5000/user/get-profile",
         { withCredentials: true }
       );
-
       console.log(response.data);
       setUsername(response.data.username);
     } catch (error) {
@@ -46,53 +47,81 @@ const Listings = () => {
   };
 
   return (
-    <section className="max-container">
-      <MainScreen
-        title={isLoggedIn ? `Welcome ${username} !` : "Welcome........"}
-      >
-        {isLoading ? (
-          <div className="text-6xl text-gray-400 font-thin mt-4 p-3">
-            Loading...
-          </div>
-        ) : listings.length === 0 ? (
-          <div className="text-6xl text-gray-300 font-thin mt-5">
-            No Listing Available Yet !
-            <img src="../helloThere.svg" className="w-[70vh] h-[70vh]" />
-          </div>
-        ) : (
-          <div className="flex flex-wrap">
-            {listings.map((listing) => (
-              <div
-                key={listing._id}
-                className="rounded-3xl p-2"
-                onClick={() => {
-                  navigate(`/show-List/${listing._id}`);
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                <img
-                  src={listing.image?.url || listing.image}
-                  alt={listing.title}
-                  className="w-96 h-80 rounded-3xl object-cover p-2 hover:opacity-80"
-                />
-                <div className="lg:w-80">
-                  <h1 className="font-bold">{listing.title}</h1>
-                  <p>{listing.description}</p>
-                  <p className="line-clamp-1">
-                    {listing.location}, {listing.country}
-                  </p>
-                  <div className="inline-flex justify-center items-center">
-                    <IndianRupee size={16} />
-                    {listing.price} /night
-                  </div>
-                  <p></p>
-                </div>
+    <div className="min-h-screen bg-[radial-gradient(circle_at_50%_120%,rgba(239,68,68,0.1),rgba(156,163,175,0.1))] relative">
+      <section className="max-container px-4 py-6 min-h-screen">
+        <MainScreen
+          title={
+            isLoggedIn ? `Welcome ${username} !` : "Welcome .... Please Login !"
+          }
+        >
+          {isLoading ? (
+            <div className="flex items-center justify-center h-[60vh]">
+              <div className="text-2xl md:text-4xl text-gray-400 font-thin animate-pulse">
+                Loading...
               </div>
-            ))}
-          </div>
-        )}
-      </MainScreen>
-    </section>
+            </div>
+          ) : listings.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-[60vh] text-center">
+              <div className="text-2xl md:text-4xl lg:text-5xl text-gray-300 font-thin mb-8">
+                No Listings Available Yet!
+              </div>
+              <img
+                src="../helloThere.svg"
+                className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 opacity-50"
+                alt="No listings"
+              />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-4">
+              {listings.map((listing) => (
+                <div
+                  key={listing._id}
+                  className="bg-white rounded-3xl border border-gray-200 hover:border-primary transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 cursor-pointer overflow-hidden"
+                  onClick={() => navigate(`/show-List/${listing._id}`)}
+                >
+                  <div className="aspect-w-16 aspect-h-12 relative">
+                    <img
+                      src={listing.image?.url || listing.image}
+                      alt={listing.title}
+                      className="w-full h-64 object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+
+                  <div className="p-4 space-y-3">
+                    <div className="flex justify-between items-start">
+                      <h2 className="font-semibold text-lg text-gray-800">
+                        {listing.title}
+                      </h2>
+                    </div>
+
+                    <p className="text-gray-600 text-sm">
+                      {listing.description}
+                    </p>
+
+                    <div className="flex items-center text-gray-500 text-sm">
+                      <span className="line-clamp-1">
+                        {listing.location}, {listing.country}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                      <div className="flex items-center text-primary font-semibold">
+                        <IndianRupee size={16} className="mr-1" />
+                        <span>{listing.price}</span>
+                        <span className="text-gray-500 font-normal ml-1">
+                          /night
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </MainScreen>
+      </section>
+    </div>
   );
 };
 
