@@ -1,7 +1,7 @@
 import Header from "./components/Header";
 import Listings from "./screens/Listings";
 import LoginScreen from "./screens/LoginScreen";
-import NewListingForm from "./screens/newListingForm";
+import NewListingForm from "./screens/NewListingForm";
 import {
   BrowserRouter as Router,
   Routes,
