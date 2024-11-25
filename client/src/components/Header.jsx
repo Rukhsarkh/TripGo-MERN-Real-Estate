@@ -28,7 +28,7 @@ const Header = () => {
               size={32}
             />
             <button
-              className="cursor-pointer font-thin max-sm:text-xl text-2xl text-gray-400 hover:text-4xl transition-all duration-300 ease-in"
+              className="cursor-pointer font-thin max-sm:text-xl text-2xl text-gray-400 2xl:hover:text-4xl transition-all duration-300 ease-in"
               onClick={() => navigate("/")}
             >
               TripGO
@@ -61,7 +61,7 @@ const Header = () => {
             type="text"
             placeholder="Search Destinations"
             className={`max-lg:border-b-2 p-2 text-lg bg-inherit w-44 border-gray-300 transition-all duration-200 ease-in focus:outline-none ${
-              expandable ? "w-72" : "w-44"
+              expandable ? "w-52" : "w-44"
             }`}
             onFocus={() => setExpandable(true)}
             onBlur={() => setExpandable(false)}
@@ -107,7 +107,7 @@ const Header = () => {
                 <p className="lg:text-gray-400 hover:text-3xl transition-all duration-300 ease-in ">
                   TripGo YOUR HOME
                 </p>
-                <Globe />
+                <Globe className="text-gray-400" size={32} />
               </div>
             </div>
           )}

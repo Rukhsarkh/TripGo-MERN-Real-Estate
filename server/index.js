@@ -69,9 +69,15 @@ passport.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+const FRONTEND_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.FRONTEND_RENDER_URL
+    : process.env.FRONTEND_URL;
+
+// Configure CORS before other middleware
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

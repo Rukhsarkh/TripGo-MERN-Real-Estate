@@ -3,6 +3,7 @@ import { StarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import SentimentAnalysis from "./SentimentAnalysis";
 import { useAuth } from "../context/AuthContext";
+import config from "../config";
 
 const AllReviews = ({ listingId }) => {
   const [allReviews, setAllReviews] = useState([]);
@@ -25,7 +26,7 @@ const AllReviews = ({ listingId }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:5000/api/${listingId}/allreviews`,
+        `${config.API_URL}/api/${listingId}/allreviews`,
         { withCredentials: true }
       );
       console.log(response.data);
