@@ -1,0 +1,7 @@
+/explore /index.html 200
+/login /index.html 200
+/sign-up /index.html 200
+/verify /index.html 200
+/new-form /index.html 200
+/show-list/* /index.html 200
+/* /index.html 200
