@@ -19,7 +19,7 @@ const LandingPage = () => {
           <p className="font-extrabold text-6xl lg:text-7xl xl:text-8xl max-lg:px-20 uppercase">
             Roam. Rest. Repeat.
           </p>
-          <p className="max-lg:px-20 text-justify max-lg:text-base max-md:tracking-wide max-md:leading-4">
+          <p className="max-lg:px-20 max-lg:text-base max-md:tracking-wide max-md:leading-5 text-justify">
             ❝ Creating a Global Community Where Every Traveler Finds Not Just a
             Place to Stay, But a Moment to Truly Live ❞
           </p>

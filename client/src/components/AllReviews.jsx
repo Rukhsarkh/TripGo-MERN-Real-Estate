@@ -41,7 +41,7 @@ const AllReviews = ({ listingId }) => {
   const handleReviewDelete = async (reviewId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/${listingId}/${reviewId}/review-delete`,
+        `${config.API_URL}/api/${listingId}/${reviewId}/review-delete`,
         {
           withCredentials: true,
         }

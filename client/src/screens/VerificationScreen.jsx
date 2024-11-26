@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import config from "../config";
 
 const VerificationScreen = () => {
   const [verificationCode, setVerificationCode] = useState([
@@ -48,12 +49,9 @@ const VerificationScreen = () => {
   const handleResendCode = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(
-        "http://localhost:5000/user/resend-code",
-        {
-          email,
-        }
-      );
+      const response = await axios.post(`${config.API_URL}/user/resend-code`, {
+        email,
+      });
       setMessage(response.data.message);
     } catch (error) {
       setMessage(error.response?.data?.message || "Error resending code");
@@ -78,7 +76,7 @@ const VerificationScreen = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:5000/user/verify-email",
+        `${config.API_URL}/user/verify-email`,
         {
           email,
           verificationCode: code,
@@ -92,7 +90,8 @@ const VerificationScreen = () => {
       setMessage(response.data.message);
       if (response.data.success) {
         setTimeout(() => {
-          navigate("/");
+          navigate("/Explore");
+          window.location.reload();
         }, 2000);
       }
     } catch (error) {

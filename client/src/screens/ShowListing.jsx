@@ -6,6 +6,7 @@ import { ArrowRightCircle } from "lucide-react";
 import LeaveReview from "../components/LeaveReview";
 import AllReviews from "../components/AllReviews";
 import { useAuth } from "../context/AuthContext";
+import config from "../config";
 
 const ShowListing = () => {
   const { id } = useParams();
@@ -25,7 +26,7 @@ const ShowListing = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:5000/api/listings/posts/${id}`,
+          `${config.API_URL}/api/listings/posts/${id}`,
           { withCredentials: true }
         );
         console.log(response.data);
@@ -45,7 +46,7 @@ const ShowListing = () => {
   const handleDeleteList = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/listings/deleteList/${id}`,
+        `${config.API_URL}/api/listings/deleteList/${id}`,
         { withCredentials: true }
       );
       alert(response.data.message);

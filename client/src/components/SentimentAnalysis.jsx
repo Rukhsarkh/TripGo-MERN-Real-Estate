@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { AlertCircle, CheckCircle, MinusCircle } from "lucide-react";
+import config from "../config";
 
 const SentimentBar = ({ percentage, colorClass }) => (
   <div className="w-full h-3 md:h-4 bg-gray-200 overflow-hidden rounded-md">
@@ -24,7 +25,7 @@ const SentimentAnalysis = ({ listingId }) => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:5000/api/${listingId}/analyzeListing`,
+          `${config.API_URL}/api/${listingId}/analyzeListing`,
           {
             withCredentials: true,
             signal: controller.signal,

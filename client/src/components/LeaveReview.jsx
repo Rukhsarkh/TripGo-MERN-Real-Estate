@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Star } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import config from "../config";
 
 const StarRating = ({ rating, onChange }) => {
   const [hover, setHover] = useState(0);
@@ -57,7 +58,7 @@ const LeaveReview = ({ listingId }) => {
     try {
       if (isLoggedIn) {
         const response = await axios.post(
-          `http://localhost:5000/api/${listingId}/create`,
+          `${config.API_URL}/api/${listingId}/create`,
           reviewData,
           { withCredentials: true }
         );

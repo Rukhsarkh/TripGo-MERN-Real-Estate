@@ -4,6 +4,7 @@ import axios from "axios";
 import MainScreen from "../components/MainScreen";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import config from "../config";
 
 const Listings = () => {
   const navigate = useNavigate();
@@ -20,9 +21,7 @@ const Listings = () => {
   const fetchListings = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(
-        "http://localhost:5000/api/listings/posts"
-      );
+      const response = await axios.get(`${config.API_URL}/api/listings/posts`);
       setListings(response.data);
       setIsLoading(false);
     } catch (error) {
@@ -35,10 +34,9 @@ const Listings = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/user/get-profile",
-        { withCredentials: true }
-      );
+      const response = await axios.get(`${config.API_URL}/user/get-profile`, {
+        withCredentials: true,
+      });
       console.log(response.data);
       setUsername(response.data.username);
     } catch (error) {

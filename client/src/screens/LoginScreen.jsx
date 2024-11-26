@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import MainScreen from "../components/MainScreen";
+import config from "../config";
 
 const LoginScreen = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const LoginScreen = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/user/login",
+        `${config.API_URL}/user/login`,
         formData,
         {
           withCredentials: true,

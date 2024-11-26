@@ -2,6 +2,7 @@ import { useState } from "react";
 import MainScreen from "../components/MainScreen";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import config from "../config";
 
 const SignUpScreen = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ const SignUpScreen = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/user/sign-up",
+        `${config.API_URL}/user/sign-up`,
         formData
       );
       setFormData({ username: "", email: "", password: "" });

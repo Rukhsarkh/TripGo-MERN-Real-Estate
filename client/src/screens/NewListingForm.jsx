@@ -2,6 +2,7 @@ import { useState } from "react";
 import MainScreen from "../components/MainScreen";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import config from "../config";
 
 const NewListingForm = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const NewListingForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/listings/create",
+        `${config.API_URL}/api/listings/create`,
         formDataToSend,
         {
           headers: {

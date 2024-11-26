@@ -1,6 +1,7 @@
 // src/context/AuthContext.js
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import config from "../config";
 
 const AuthContext = createContext(null);
 
@@ -19,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   const checkAuthStatus = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get("http://localhost:5000/user/auth", {
+      const response = await axios.get(`${config.API_URL}/user/auth`, {
         withCredentials: true,
       });
       setIsLoggedIn(response.data.isAuthenticated);
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/user/logout", {
+      const response = await axios.get(`${config.API_URL}/user/logout`, {
         withCredentials: true,
       });
       if (response.status === 200) {
