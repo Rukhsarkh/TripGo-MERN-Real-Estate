@@ -50,7 +50,6 @@ const ShowListing = () => {
         { withCredentials: true }
       );
       alert(response.data.message);
-      window.location.reload();
     } catch (error) {
       console.error(error);
     }

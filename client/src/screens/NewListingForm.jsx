@@ -65,7 +65,6 @@ const NewListingForm = () => {
         country: "",
       });
       navigate("/explore");
-      window.location.reload();
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
       if (error.response?.status === 401) {

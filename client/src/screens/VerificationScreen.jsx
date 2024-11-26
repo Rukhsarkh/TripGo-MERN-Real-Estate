@@ -91,7 +91,6 @@ const VerificationScreen = () => {
       if (response.data.success) {
         setTimeout(() => {
           navigate("/explore");
-          window.location.reload();
         }, 2000);
       }
     } catch (error) {

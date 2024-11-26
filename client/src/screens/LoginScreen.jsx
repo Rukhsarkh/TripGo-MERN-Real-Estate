@@ -44,7 +44,6 @@ const LoginScreen = () => {
         navigate(savedPath);
       } else {
         navigate("/explore");
-        window.location.reload();
       }
     } catch (error) {
       console.error(error);
