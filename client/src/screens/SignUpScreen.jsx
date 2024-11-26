@@ -11,7 +11,7 @@ const SignUpScreen = () => {
     password: "",
   });
   const [message, setMessages] = useState("");
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -32,7 +32,7 @@ const SignUpScreen = () => {
 
       if (response.data.success) {
         setMessages("Sign up successful! Please verify your email.");
-        Navigate("/verify", { state: { email: formData.email } });
+        navigate("/verify", { state: { email: formData.email } });
       }
       console.log(response);
     } catch (error) {
@@ -123,7 +123,7 @@ const SignUpScreen = () => {
                     Already have an account?{" "}
                     <button
                       type="button"
-                      onClick={() => Navigate("/login")}
+                      onClick={() => navigate("/login")}
                       className="text-primary hover:text-primary/80 font-medium focus:outline-none transition-colors duration-200"
                     >
                       Log in

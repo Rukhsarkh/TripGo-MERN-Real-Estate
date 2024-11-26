@@ -26,10 +26,10 @@ const LandingPage = () => {
           <button
             className="cursor-pointer text-xl inline-flex items-center gap-2 p-2 font-extrabold lg:p-3 rounded-lg hover:shadow-md hover:shadow-white shadow-inner shadow-white active:translate-y-0.5 transition-all duration-500 ease-linear hover:scale-105"
             onClick={() => {
-              navigate("/Explore");
+              navigate("/explore");
             }}
           >
-            Explore <ArrowRight />
+            explore <ArrowRight />
           </button>
         </div>
       </div>

@@ -64,7 +64,8 @@ const NewListingForm = () => {
         location: "",
         country: "",
       });
-      navigate("/");
+      navigate("/explore");
+      window.location.reload();
     } catch (error) {
       console.error("Error details:", error.response?.data || error.message);
       if (error.response?.status === 401) {
@@ -211,10 +212,7 @@ const NewListingForm = () => {
               </div>
 
               <div>
-                <button
-                  className="w-full sm:w-auto px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors"
-                  type="submit"
-                >
+                <button className="btn-essential" type="submit">
                   Add Listing
                 </button>
               </div>

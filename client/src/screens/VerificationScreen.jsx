@@ -90,7 +90,7 @@ const VerificationScreen = () => {
       setMessage(response.data.message);
       if (response.data.success) {
         setTimeout(() => {
-          navigate("/Explore");
+          navigate("/explore");
           window.location.reload();
         }, 2000);
       }

@@ -43,7 +43,8 @@ const LoginScreen = () => {
       if (savedPath) {
         navigate(savedPath);
       } else {
-        navigate("/Explore");
+        navigate("/explore");
+        window.location.reload();
       }
     } catch (error) {
       console.error(error);
@@ -114,7 +115,7 @@ const LoginScreen = () => {
                     Don't have an account?{" "}
                     <button
                       type="button"
-                      onClick={() => navigate("/Sign-up")}
+                      onClick={() => navigate("/sign-up")}
                       className="text-primary hover:text-primary/80 font-medium focus:outline-none transition-colors duration-200"
                     >
                       Sign up

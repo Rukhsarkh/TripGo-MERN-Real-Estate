@@ -39,13 +39,15 @@ function App() {
                 </>
               }
             >
-              <Route path="Explore" element={<Listings />} />
+              <Route path="explore" element={<Listings />} />
               <Route path="login" element={<LoginScreen />} />
-              <Route path="Sign-up" element={<SignUpScreen />} />
+              <Route path="sign-up" element={<SignUpScreen />} />
               <Route path="verify" element={<VerificationScreen />} />
               <Route path="new-form" element={<NewListingForm />} />
-              <Route path="show-List/:id" element={<ShowListing />} />
+              <Route path="show-list/:id" element={<ShowListing />} />
             </Route>
+            {/* Catch-all route */}
+            <Route path="*" element={<LandingPage />} />
           </Routes>
         </div>
       </AuthProvider>
