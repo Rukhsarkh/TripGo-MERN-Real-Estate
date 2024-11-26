@@ -69,20 +69,29 @@ passport.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-const FRONTEND_URL =
-  process.env.NODE_ENV === "production"
-    ? process.env.FRONTEND_RENDER_URL
-    : process.env.FRONTEND_URL;
+// Detailed CORS configuration
+const corsOptions = {
+  origin: [
+    "https://supertripdotcom.onrender.com", // Your frontend URL
+    "http://localhost:3000", // Local development URL
+    "http://localhost:5173", // Vite default dev server
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "Access-Control-Allow-Origin",
+    "Access-Control-Allow-Headers",
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
 
-// Configure CORS before other middleware
-app.use(
-  cors({
-    origin: FRONTEND_URL,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+// Preflight request handler
+app.options("*", cors(corsOptions));
 
 //Persists user data inside session
 passport.serializeUser((user, done) => {
