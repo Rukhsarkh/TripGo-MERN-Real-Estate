@@ -7,7 +7,6 @@ import {
   Routes,
   Route,
   Outlet,
-  Navigate,
 } from "react-router-dom";
 import ShowListing from "./screens/ShowListing";
 import SignUpScreen from "./screens/SignUpScreen";
@@ -48,7 +47,7 @@ function App() {
               <Route path="show-list/:id" element={<ShowListing />} />
             </Route>
             {/* Catch-all route */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<LandingPage />} />
           </Routes>
         </div>
       </AuthProvider>
