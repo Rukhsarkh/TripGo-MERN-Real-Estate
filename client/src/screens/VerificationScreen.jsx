@@ -49,9 +49,15 @@ const VerificationScreen = () => {
   const handleResendCode = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(`${config.API_URL}/user/resend-code`, {
-        email,
-      });
+      const response = await axios.post(
+        `${config.API_URL}/user/resend-code`,
+        {
+          email,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       setMessage(response.data.message);
     } catch (error) {
       setMessage(error.response?.data?.message || "Error resending code");

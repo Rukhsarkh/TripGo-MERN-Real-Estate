@@ -18,7 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cookieParser(process.env.SESSION_SECRET_CODE));
+app.use(cookieParser(process.env.COOKIE_SECRET_CODE));
 
 app.use(
   session({
@@ -30,6 +30,8 @@ app.use(
       collectionName: "sessions",
     }),
     cookie: {
+      // secure: process.env.NODE_ENV === "production",
+      // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,

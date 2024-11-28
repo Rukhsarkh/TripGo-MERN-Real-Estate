@@ -26,7 +26,10 @@ const SignUpScreen = () => {
     try {
       const response = await axios.post(
         `${config.API_URL}/user/sign-up`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       setFormData({ username: "", email: "", password: "" });
 

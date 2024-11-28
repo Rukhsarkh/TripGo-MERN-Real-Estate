@@ -5,6 +5,7 @@ import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import rateLimit from "express-rate-limit";
 import passport from "passport";
+import { isLoggedIn } from "../middleware/auth.js";
 
 //test - route
 router.get("/get-hello", (req, res) => {
@@ -12,15 +13,23 @@ router.get("/get-hello", (req, res) => {
 });
 
 router.get("/auth", (req, res) => {
-  if (req.isAuthenticated) {
-    res.json({
-      id: req.user.id,
-      email: req.user.email,
-      isAuthenticated: true,
-      username: req.user.username,
+  try {
+    if (req.isAuthenticated()) {
+      res.json({
+        id: req.user.id,
+        email: req.user.email,
+        isAuthenticated: true,
+        username: req.user.username,
+      });
+    } else {
+      res.json({ isAuthenticated: false });
+    }
+  } catch (error) {
+    console.error("Auth route error:", error);
+    res.status(500).json({
+      isAuthenticated: false,
+      error: "Internal server error",
     });
-  } else {
-    res.json({ isAuthenticated: false });
   }
 });
 
@@ -66,7 +75,7 @@ router.get("/logout", (req, res, next) => {
   });
 });
 
-router.get("/get-profile", async (req, res) => {
+router.get("/get-profile", isLoggedIn, async (req, res) => {
   try {
     console.log("Session:", req.session);
     console.log("User object:", req.user);

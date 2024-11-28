@@ -21,7 +21,10 @@ const Listings = () => {
   const fetchListings = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${config.API_URL}/api/listings/posts`);
+      const response = await axios.get(`${config.API_URL}/api/listings/posts`, {
+        withCredentials: true,
+      });
+      console.log(response.data);
       setListings(response.data);
       setIsLoading(false);
     } catch (error) {
