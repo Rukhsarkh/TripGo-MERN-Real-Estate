@@ -74,22 +74,20 @@ app.use(passport.session());
 // Detailed CORS configuration
 const corsOptions = {
   origin: [
-    "https://supertripdotcom.onrender.com", // Your frontend URL
-    "http://localhost:3000", // Local development URL
-    "http://localhost:5173", // Vite default dev server
+    "https://supertripdotcom.onrender.com",
+    "http://localhost:3000",
+    "http://localhost:5173",
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
   allowedHeaders: [
     "Content-Type",
     "Authorization",
-    "Access-Control-Allow-Origin",
-    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Credentials",
   ],
-  credentials: true,
   optionsSuccessStatus: 200,
 };
 
-// Apply CORS middleware
 app.use(cors(corsOptions));
 
 // Preflight request handler
