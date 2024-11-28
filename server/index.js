@@ -15,6 +15,9 @@ connectDB();
 
 const app = express();
 
+// Add this before your middleware setup
+app.set("trust proxy", 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -30,8 +33,8 @@ app.use(
       collectionName: "sessions",
     }),
     cookie: {
-      // secure: process.env.NODE_ENV === "production",
-      // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
@@ -74,20 +77,23 @@ app.use(passport.session());
 // Detailed CORS configuration
 const corsOptions = {
   origin: [
-    "https://supertripdotcom.onrender.com",
-    "http://localhost:3000",
-    "http://localhost:5173",
+    "https://supertripdotcom.onrender.com", // Your frontend URL
+    "http://localhost:3000", // Local development URL
+    "http://localhost:5173", // Vite default dev server
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true,
   allowedHeaders: [
     "Content-Type",
     "Authorization",
+    "Access-Control-Allow-Origin",
+    "Access-Control-Allow-Headers",
     "Access-Control-Allow-Credentials",
   ],
+  credentials: true,
   optionsSuccessStatus: 200,
 };
 
+// Apply CORS middleware
 app.use(cors(corsOptions));
 
 // Preflight request handler
