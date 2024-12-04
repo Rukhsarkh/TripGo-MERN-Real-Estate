@@ -230,11 +230,11 @@ const ShowListing = () => {
         <h1 className="text-2xl md:text-3xl font-bold max-lg:text-center text-gray-800 mb-4">
           Where you'll be
         </h1>
-        {/* <ShowMap
+        <ShowMap
           locationCoordinates={listing.geometry.coordinates}
           locationName={listing.title}
           locationImage={listing.image.url}
-        /> */}
+        />
       </div>
       <hr className="h-0.5 bg-black" />
       {/* Reviews Section */}
