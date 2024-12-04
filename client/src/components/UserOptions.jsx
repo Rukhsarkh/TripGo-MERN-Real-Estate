@@ -58,7 +58,7 @@ const UserOptions = ({ isLoggedIn, logout }) => {
           <hr />
           <div className="flex flex-col gap-2">
             <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-              Airbnb Your Home
+              TripGo Your Home
             </button>
             <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
               Host Your Experience

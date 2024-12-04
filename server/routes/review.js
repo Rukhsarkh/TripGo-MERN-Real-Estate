@@ -64,13 +64,48 @@ router.delete(
   }
 );
 
+router.put(
+  "/:listingId/:reviewId/review-edit",
+  isLoggedIn,
+  async (req, res) => {
+    try {
+      const { listingId, reviewId } = req.params;
+      const { comment, rating } = req.body;
+
+      // Find and update the review, ensuring the user is the author
+      const updatedReview = await review.findOneAndUpdate(
+        {
+          _id: reviewId,
+          author: req.user._id, // Ensure only the author can edit
+        },
+        { comment, rating },
+        { new: true }
+      );
+
+      if (!updatedReview) {
+        return res
+          .status(404)
+          .json({ message: "Review not found or unauthorized" });
+      }
+
+      await Listing.findByIdAndUpdate(listingId, {
+        $addToSet: { reviews: updatedReview._id },
+      });
+
+      res.status(200).json(updatedReview);
+    } catch (error) {
+      res.status(500).json({ message: "Error updating review" });
+    }
+  }
+);
+
 router.get("/:listingId/analyzeListing", async (req, res) => {
   const analyzer = new PropertyReviewAnalyzer();
-  
+
   try {
     const listingId = req.params.listingId;
     const listing = await Listing.findById(listingId).populate("reviews");
-    
+
     if (!listing) {
       return res.status(404).json({ error: "Listing not found" });
     }
@@ -82,19 +117,19 @@ router.get("/:listingId/analyzeListing", async (req, res) => {
         sentimentDistribution: {
           positive: 0,
           neutral: 0,
-          negative: 0
+          negative: 0,
         },
-        detailedResults: []
+        detailedResults: [],
       });
     }
-    
+
     const analysis = await analyzer.analyzePropertyReviews(listing.reviews);
     res.json(analysis);
   } catch (error) {
     console.error("Error in analysis:", error);
-    res.status(500).json({ 
-      error: "Analysis failed", 
-      details: error.message 
+    res.status(500).json({
+      error: "Analysis failed",
+      details: error.message,
     });
   }
 });

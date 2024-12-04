@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Star } from "lucide-react";
+import {
+  Star,
+  SendIcon,
+  AlertCircleIcon,
+  CheckCircle2Icon,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import config from "../config";
 
@@ -12,25 +17,44 @@ const StarRating = ({ rating, onChange }) => {
   };
 
   return (
-    <div className="flex gap-2 md:gap-3" onMouseLeave={() => setHover(0)}>
+    <div
+      className="flex items-center gap-1 md:gap-2"
+      onMouseLeave={() => setHover(0)}
+    >
       {[1, 2, 3, 4, 5].map((star) => (
         <button
           key={star}
           type="button"
+          aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
           onClick={() => handleStarClick(star)}
           onMouseEnter={() => setHover(star)}
-          className="focus:outline-none transform hover:scale-110 transition-transform"
+          className="group relative focus:outline-none transform hover:scale-110 transition-all duration-200 ease-in-out"
         >
           <Star
-            size={20}
-            className={`transition-colors md:h-6 md:w-6 ${
-              (hover || parseInt(rating)) >= star
-                ? "fill-yellow-400 text-yellow-400"
-                : "fill-gray-200 text-gray-200"
-            }`}
+            size={28}
+            className={`
+              transition-all duration-300 ease-in-out
+              ${
+                (hover || parseInt(rating)) >= star
+                  ? "fill-yellow-400 text-yellow-400 scale-110"
+                  : "fill-gray-200 text-gray-200 group-hover:fill-yellow-200"
+              }
+            `}
           />
+          {(hover || parseInt(rating)) >= star && (
+            <span
+              className="absolute -top-8 left-1/2 -translate-x-1/2 
+                bg-black text-white text-xs px-2 py-1 rounded-md 
+                opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              {star}
+            </span>
+          )}
         </button>
       ))}
+      {parseInt(rating) > 0 && (
+        <span className="ml-2 text-sm text-gray-600">{rating} / 5</span>
+      )}
     </div>
   );
 };
@@ -42,6 +66,8 @@ const LeaveReview = ({ listingId }) => {
   });
 
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setReviewData({
@@ -54,6 +80,24 @@ const LeaveReview = ({ listingId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage("");
+    setMessageType("");
+
+    // Validation
+    if (parseInt(reviewData.rating) === 0) {
+      setMessage("Please select a rating");
+      setMessageType("error");
+      setIsLoading(false);
+      return;
+    }
+
+    if (reviewData.comment.trim().length < 10) {
+      setMessage("Comment must be at least 10 characters long");
+      setMessageType("error");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       if (isLoggedIn) {
@@ -62,62 +106,115 @@ const LeaveReview = ({ listingId }) => {
           reviewData,
           { withCredentials: true }
         );
-        console.log(response.data);
+
         setMessage("Review published successfully");
+        setMessageType("success");
         setReviewData({
           rating: "0",
           comment: "",
         });
+        window.location.reload();
       } else {
-        setMessage("Need to login first!");
+        setMessage("Please log in to submit a review");
+        setMessageType("error");
       }
     } catch (error) {
-      setMessage("Review Publishing Error");
+      setMessage(
+        error.response?.data?.message ||
+          "An error occurred while publishing your review"
+      );
+      setMessageType("error");
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-5xl">
+    <div className="w-full max-w-5xl bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-6">
+      <h2 className="text-2xl md:text-3xl font-bold max-lg:text-center text-gray-800 mb-4">
+        Share Your Experience
+      </h2>
+
       {message && (
-        <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm md:text-base">
+        <div
+          className={`
+            flex items-center gap-3 p-4 rounded-lg text-sm md:text-base 
+            ${
+              messageType === "success"
+                ? "bg-green-50 text-green-700"
+                : "bg-red-50 text-red-700"
+            }
+          `}
+        >
+          {messageType === "success" ? (
+            <CheckCircle2Icon className="text-green-500" />
+          ) : (
+            <AlertCircleIcon className="text-red-500" />
+          )}
           {message}
         </div>
       )}
 
-      <form className="flex flex-col gap-6 mt-5" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="rating" className="text-sm md:text-base font-medium">
-            Rating
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="space-y-2">
+          <label
+            htmlFor="rating"
+            className="block text-sm md:text-base font-medium text-gray-700"
+          >
+            Your Rating
           </label>
           <StarRating rating={reviewData.rating} onChange={handleChange} />
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label htmlFor="comment" className="text-sm md:text-base font-medium">
-            Comment
+        <div className="space-y-2">
+          <label
+            htmlFor="comment"
+            className="block text-sm md:text-base font-medium text-gray-700"
+          >
+            Your Review
           </label>
           <textarea
             id="comment"
             name="comment"
             value={reviewData.comment}
             onChange={handleChange}
-            placeholder="Have you ever been here? Share your experience..."
+            placeholder="Tell us about your experience in detail..."
             rows="5"
-            className="w-full md:w-3/4 lg:w-2/3 border-2 rounded-lg p-3 border-primary 
-              text-sm md:text-base placeholder:text-gray-400 resize-none
-              focus:ring-2 focus:ring-primary focus:outline-none"
+            maxLength={500}
+            className="
+              w-full border-2 rounded-lg p-4 
+              text-sm md:text-base 
+              border-gray-300 focus:border-primary 
+              focus:ring-2 focus:ring-primary/30 
+              transition-all duration-300 
+              resize-none
+              placeholder:text-gray-400
+            "
           />
+          <div className="text-right text-xs text-gray-500">
+            {reviewData.comment.length}/500 characters
+          </div>
         </div>
 
-        <button
-          type="submit"
-          className="rounded-xl bg-primary text-white text-sm md:text-base
-            w-24 h-10 md:h-12 hover:bg-opacity-90 transition-colors
-            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-        >
-          Submit
-        </button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="
+              flex items-center justify-center 
+              px-6 py-3 
+              bg-primary text-white 
+              rounded-lg 
+              hover:bg-primary/90 
+              active:translate-y-0.5 
+              transition-all duration-300 ease-in-out
+            "
+          >
+            <SendIcon className="mr-2 group-hover:animate-pulse" size={20} />
+            {isLoading ? "Submitting..." : "Submit Review"}
+          </button>
+        </div>
       </form>
     </div>
   );

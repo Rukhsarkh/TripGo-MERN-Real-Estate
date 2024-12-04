@@ -1,5 +1,5 @@
 import { CompassIcon, Globe, MenuIcon, Search, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import UserOptions from "./UserOptions";
@@ -10,6 +10,26 @@ const CommonHeader = () => {
   const [toggle, setToggle] = useState(false);
   const { isLoggedIn, isLoading, logout } = useAuth();
   const [expandable, setExpandable] = useState(false);
+
+  const userOptionsRef = useRef(null);
+  const userButtonRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (
+        userOptionsRef.current &&
+        !userOptionsRef.current.contains(event.target) &&
+        userButtonRef.current &&
+        !userButtonRef.current.contains(event.target)
+      ) {
+        setToggle(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
 
   const handleOnClick = () => {
     setToggle((prevToggle) => !prevToggle);
@@ -36,6 +56,7 @@ const CommonHeader = () => {
               <div
                 className="relative w-20 h-10 bg-white rounded-3xl inline-flex items-center gap-3 p-1 cursor-pointer shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300"
                 onClick={handleOnClick}
+                ref={userButtonRef}
               >
                 <MenuIcon />
                 <User
@@ -45,32 +66,42 @@ const CommonHeader = () => {
               </div>
 
               {toggle && (
-                <UserOptions
-                  navigate={navigate}
-                  isLoading={isLoading}
-                  logout={logout}
-                  isLoggedIn={isLoggedIn}
-                />
+                <div ref={userOptionsRef}>
+                  <UserOptions
+                    navigate={navigate}
+                    isLoading={isLoading}
+                    logout={logout}
+                    isLoggedIn={isLoggedIn}
+                  />
+                </div>
               )}
             </div>
           )}
         </div>
 
-        <div className="flex max-sm:flex-col sm:flex-row p-4 md:gap-4 justify-center items-center">
+        <div className="flex max-sm:flex-col sm:flex-row p-4 gap-4 justify-center items-center">
           {isMid && (
-            <div
-              className="cursor-pointer inline-flex items-center gap-2 text-primary"
-              onClick={() => {
-                if (!isLoggedIn) {
-                  localStorage.setItem("returnTo", "/new-form");
-                  navigate("/login");
-                } else {
-                  navigate("/new-form");
-                }
-              }}
-            >
-              <p className="text-xl">TRIPGO YOUR HOME</p>
-              <Globe className="max-lg:size-5" />
+            <div className="flex flex-row justify-center items-center gap-5">
+              <button
+                className="text-xl rounded-3xl p-1 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white"
+                onClick={() => navigate("/explore")}
+              >
+                Explore
+              </button>
+              <div
+                className="cursor-pointer inline-flex items-center gap-2 text-primary rounded-3xl p-1 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white"
+                onClick={() => {
+                  if (!isLoggedIn) {
+                    localStorage.setItem("returnTo", "/new-form");
+                    navigate("/login");
+                  } else {
+                    navigate("/new-form");
+                  }
+                }}
+              >
+                <p className="text-xl ">Tripgo Your Home</p>
+                <Globe className="max-lg:size-5" />
+              </div>
             </div>
           )}
           <div className="flex flex-row gap-2 p-4">
@@ -92,10 +123,17 @@ const CommonHeader = () => {
 
         {isLarge && (
           <div className="flex flex-row max-lg:flex-col gap-5 text-lg text-thin p-2">
+            <button
+              className="text-xl rounded-3xl p-1 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white hover:bg-gray-100"
+              onClick={() => navigate("/explore")}
+            >
+              Explore
+            </button>
             <div className="relative">
               <div
-                className="relative w-20 h-10 bg-white rounded-3xl inline-flex items-center gap-3 p-1 cursor-pointer shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300"
+                className="relative w-20 h-10 bg-white rounded-3xl inline-flex items-center gap-3 p-1 cursor-pointer shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:bg-gray-100"
                 onClick={handleOnClick}
+                ref={userButtonRef}
               >
                 <MenuIcon />
                 <User
@@ -105,16 +143,18 @@ const CommonHeader = () => {
               </div>
 
               {toggle && (
-                <UserOptions
-                  navigate={navigate}
-                  isLoading={isLoading}
-                  logout={logout}
-                  isLoggedIn={isLoggedIn}
-                />
+                <div ref={userOptionsRef}>
+                  <UserOptions
+                    navigate={navigate}
+                    isLoading={isLoading}
+                    logout={logout}
+                    isLoggedIn={isLoggedIn}
+                  />
+                </div>
               )}
             </div>
             <div
-              className="cursor-pointer inline-flex items-center gap-2"
+              className="cursor-pointer inline-flex items-center gap-2 rounded-3xl p-1 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white hover:bg-gray-100"
               onClick={() => {
                 // Check authentication before navigating
                 if (!isLoggedIn) {

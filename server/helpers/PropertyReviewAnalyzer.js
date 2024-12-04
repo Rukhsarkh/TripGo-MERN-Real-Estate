@@ -43,18 +43,78 @@ class PropertyReviewAnalyzer {
     const tokens = this.preprocess(text);
     let score = this.analyzer.getSentiment(tokens);
 
-    // Keyword-based adjustments for neutral sentiment
-    const neutralKeywords = ["okay", "average", "not bad", "mediocre", "fine"];
+    const negativeKeywords = [
+      "bad",
+      "terrible",
+      "awful",
+      "horrible",
+      "poor",
+      "disappointing",
+      "worst",
+      "unhappy",
+      "dissatisfied",
+      "not good",
+      "below expectation",
+      "problems",
+      "issue",
+      "complaint",
+      "frustrating",
+      "unpleasant",
+      "disaster",
+    ];
+
+    const positiveKeywords = [
+      "great",
+      "excellent",
+      "amazing",
+      "wonderful",
+      "fantastic",
+      "superb",
+      "outstanding",
+      "perfect",
+      "awesome",
+      "delightful",
+    ];
+
+    const neutralKeywords = [
+      "okay",
+      "average",
+      "not bad",
+      "mediocre",
+      "fine",
+      "standard",
+      "ordinary",
+      "acceptable",
+      "decent",
+    ];
+
+    const containsNegativeKeyword = negativeKeywords.some((word) =>
+      text.toLowerCase().includes(word)
+    );
+
+    const containsPositiveKeyword = positiveKeywords.some((word) =>
+      text.toLowerCase().includes(word)
+    );
+
     const containsNeutralKeyword = neutralKeywords.some((word) =>
       text.toLowerCase().includes(word)
     );
 
-    if (containsNeutralKeyword) {
-      score = Math.max(-0.2, Math.min(0.2, score)); // Nudge score towards neutral
+    // Adjust scoring based on keywords
+    if (containsNegativeKeyword) {
+      score = Math.min(-0.3, score - 0.5); // Push towards negative
     }
 
-    if (score > 0.5) return "positive";
-    if (score < -0.5) return "negative";
+    if (containsPositiveKeyword) {
+      score = Math.max(0.3, score + 0.5); // Push towards positive
+    }
+
+    if (containsNeutralKeyword) {
+      score = Math.max(-0.2, Math.min(0.2, score)); // Nudge towards neutral
+    }
+
+    if (score > 0.3) return "positive";
+    if (score < -0.3) return "negative";
     return "neutral";
   }
 

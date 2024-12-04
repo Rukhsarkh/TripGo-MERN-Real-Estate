@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { AlertCircle, CheckCircle, MinusCircle } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle,
+  MinusCircle,
+  Star,
+  TrendingUp,
+} from "lucide-react";
 import config from "../config";
 
 const SentimentBar = ({ percentage, colorClass }) => (
@@ -53,7 +59,7 @@ const SentimentAnalysis = ({ listingId }) => {
   }, [listingId]);
 
   const SentimentCard = ({ title, percentage, icon: Icon, colorClass }) => (
-    <div className="space-y-2 p-2 md:p-3 lg:p-4 bg-white rounded-lg hover:shadow-sm transition-shadow">
+    <div className="space-y-2 p-2 md:p-3 lg:p-4 bg-gray-50 rounded-lg shadow-lg shadow-gray-300 transition-shadow">
       <div className="flex items-center justify-between gap-2 md:gap-4 lg:gap-6">
         <div className="flex items-center gap-2 md:gap-3">
           <Icon
@@ -110,15 +116,20 @@ const SentimentAnalysis = ({ listingId }) => {
   }
 
   return (
-    <div className="w-full max-w-3xl p-3 md:p-4 lg:p-6 space-y-4 md:space-y-6">
+    <div className="w-full max-w-3xl p-3 md:p-4 lg:p-8 space-y-4 md:space-y-6 shadow-lg shadow-gray-300 rounded-b-xl">
       <div className="space-y-2 md:space-y-4">
-        <h2 className="text-lg md:text-2xl font-bold">Review Analysis →</h2>
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <p className="text-xs md:text-sm text-gray-600">
-            Based on {analysis.totalReviews} reviews
-          </p>
-          <div className="text-base md:text-lg text-primary font-medium">
-            Average Rating: {analysis.averageRating} ⭐
+        <div className="justify-center items-center inline-flex gap-4">
+          <TrendingUp className=" text-primary" size={32} />
+          <h2 className="text-lg md:text-2xl font-bold">Review Analysis →</h2>
+        </div>
+
+        <div className="flex items-center space-x-4 text-gray-600">
+          <p className="text-sm">Based on {analysis.totalReviews} reviews</p>
+          <div className="flex items-center space-x-1">
+            <Star className="w-4 h-4 text-yellow-500" />
+            <span className="text-base font-semibold">
+              {analysis.averageRating} / 5
+            </span>
           </div>
         </div>
       </div>
@@ -126,21 +137,21 @@ const SentimentAnalysis = ({ listingId }) => {
       <div className="space-y-3 md:space-y-4">
         <div className="space-y-3 md:space-y-4">
           <SentimentCard
-            title="Positive"
+            title="Positive Comments"
             percentage={analysis.sentimentDistribution.positive}
             icon={CheckCircle}
             colorClass="bg-green-50 border-green-200"
           />
 
           <SentimentCard
-            title="Neutral"
+            title="Neutral Comments"
             percentage={analysis.sentimentDistribution.neutral}
             icon={MinusCircle}
             colorClass="bg-yellow-50 border-yellow-200"
           />
 
           <SentimentCard
-            title="Negative"
+            title="Negative Comments"
             percentage={analysis.sentimentDistribution.negative}
             icon={AlertCircle}
             colorClass="bg-red-50 border-red-200"

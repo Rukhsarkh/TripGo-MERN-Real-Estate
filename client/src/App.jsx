@@ -14,6 +14,9 @@ import VerificationScreen from "./screens/VerificationScreen";
 import { AuthProvider } from "./context/AuthContext";
 import LandingPage from "./screens/LandingPage";
 import CommonHeader from "./components/CommonHeader";
+import EditListingForm from "./screens/EditListingForm";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -46,12 +49,14 @@ function App() {
               <Route path="verify" element={<VerificationScreen />} />
               <Route path="new-form" element={<NewListingForm />} />
               <Route path="show-list/:id" element={<ShowListing />} />
+              <Route path="edit-list/:id" element={<EditListingForm />} />
             </Route>
             {/* Catch-all route */}
             <Route path="*" element={<LandingPage />} />
           </Routes>
         </div>
       </AuthProvider>
+      <ToastContainer />
     </Router>
   );
 }

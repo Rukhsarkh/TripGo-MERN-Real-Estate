@@ -1,8 +1,8 @@
 function MainScreen({ title, children }) {
   return (
-    <div className="max-container max-sm:mt-40 sm:mt-44 md:mt-48 lg:mt-20">
+    <div className="max-container max-sm:mt-60 sm:mt-48 md:mt-52 lg:mt-24">
       {title && (
-        <h1 className="max-md:text-3xl md:text-6xl lg:text-7xl lg:font-thin text-primary p-8 px-4 max-xl:text-center">
+        <h1 className="max-md:text-3xl md:text-5xl font-thin text-primary py-2 lg:px-2 max-xl:text-center">
           {title}
         </h1>
       )}
