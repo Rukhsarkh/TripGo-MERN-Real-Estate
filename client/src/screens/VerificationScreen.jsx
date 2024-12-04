@@ -94,32 +94,36 @@ const VerificationScreen = () => {
           withCredentials: true,
         }
       );
-      setMessage(response.data.message);
+
       if (response.data.success) {
-        setTimeout(() => {
-          navigate("/explore");
-          toast.success("Welcome to TripGo", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progressStyle: {
-              background: "#32de84",
-            },
-            style: {
-              borderRadius: "12px",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-              padding: "12px 20px",
-              margin: "30px",
-              fontSize: "0.95rem",
-              color: "#32de84",
-            },
-            icon: () => <CheckCircle2Icon color="#32de84" size={20} />,
-          });
-        }, 2000);
+        setMessage(response.data.message);
+
+        toast.success("Welcome to TripGo. You are aheading towards Home page", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressStyle: {
+            background: "#32de84",
+          },
+          style: {
+            borderRadius: "12px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            padding: "12px 20px",
+            margin: "30px",
+            fontSize: "0.95rem",
+            color: "#32de84",
+          },
+          icon: () => <CheckCircle2Icon color="#32de84" size={20} />,
+        });
       }
+
+      setTimeout(() => {
+        navigate("/explore");
+        window.location.reload();
+      }, 4000);
     } catch (error) {
       setMessage(error.response?.data?.message || "Error verifying code");
       toast.error("Login failed! Try again", {

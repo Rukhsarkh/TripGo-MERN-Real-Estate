@@ -60,7 +60,7 @@ const CommonHeader = () => {
               >
                 <MenuIcon />
                 <User
-                  className="border-2 rounded-full bg-primary text-white"
+                  className="rounded-full bg-primary text-white"
                   size={32}
                 />
               </div>
@@ -108,7 +108,7 @@ const CommonHeader = () => {
             <input
               type="text"
               placeholder="Search Destinations"
-              className={` border-b-2 px-2 text-lg bg-inherit w-44 border-black transition-all duration-200 ease-in focus:outline-none ${
+              className={` border-b-2 px-2 font-thin text-lg bg-inherit w-44 border-black transition-all duration-200 ease-in focus:outline-none ${
                 expandable ? "w-52" : "w-44"
               }`}
               onFocus={() => setExpandable(true)}
@@ -137,7 +137,7 @@ const CommonHeader = () => {
               >
                 <MenuIcon />
                 <User
-                  className="border-2 rounded-full bg-primary text-white"
+                  className="rounded-full bg-primary text-white"
                   size={32}
                 />
               </div>

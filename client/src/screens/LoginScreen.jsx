@@ -31,8 +31,6 @@ const LoginScreen = () => {
         { withCredentials: true }
       );
 
-      console.log(response.data);
-
       toast.success(`Welcome back ! ${response.data.user.username}`, {
         position: "top-center",
         autoClose: 3000,

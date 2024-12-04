@@ -51,7 +51,9 @@ const Listings = () => {
       <section className="max-container px-4 py-4 min-h-screen">
         <MainScreen
           title={
-            isLoggedIn ? `Welcome ${username} !` : "Welcome .... Please Login !"
+            isLoggedIn
+              ? `Welcome ${username} !`
+              : `Welcome To TripGo ! Login Please`
           }
         >
           {isLoading ? (
