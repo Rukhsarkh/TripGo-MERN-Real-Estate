@@ -44,6 +44,8 @@ const SignUpScreen = () => {
         }
       );
 
+      navigate("/explore");
+
       toast.success(`Welcome ! ${response.data.user.username}`, {
         position: "top-center",
         autoClose: 3000,
@@ -63,7 +65,9 @@ const SignUpScreen = () => {
         icon: () => <CheckCircle2Icon color="#32de84" size={20} />,
       });
 
-      navigate("/explore");
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
 
       // if (response.data.success) {
       //   setStatus("Sign up successful! Please verify your email.");
