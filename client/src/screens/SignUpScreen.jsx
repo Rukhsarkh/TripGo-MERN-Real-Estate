@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import config from "../config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { XIcon } from "lucide-react";
+import { CheckCircle2Icon, XIcon } from "lucide-react";
 
 // Validation Schema
 const SignUpValidationSchema = Yup.object().shape({
@@ -44,10 +44,31 @@ const SignUpScreen = () => {
         }
       );
 
-      if (response.data.success) {
-        setStatus("Sign up successful! Please verify your email.");
-        navigate("/verify", { state: { email: values.email } });
-      }
+      toast.success(`Welcome ! ${response.data.user.username}`, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progressStyle: { background: "#32de84" },
+        style: {
+          borderRadius: "12px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          padding: "12px 20px",
+          margin: "30px",
+          fontSize: "0.95rem",
+          color: "#32de84",
+        },
+        icon: () => <CheckCircle2Icon color="#32de84" size={20} />,
+      });
+
+      navigate("/explore");
+
+      // if (response.data.success) {
+      //   setStatus("Sign up successful! Please verify your email.");
+      //   navigate("/verify", { state: { email: values.email } });
+      // }
     } catch (error) {
       setStatus(error.response?.data?.message || "Error signing up");
       toast.error(

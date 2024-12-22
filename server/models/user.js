@@ -20,15 +20,16 @@ const userSchema = new mongoose.Schema({
   },
   verifyCode: {
     type: String,
-    required: [true, "Verification code is required"],
+    // required: [true, "Verification code is required"],
   },
   verifyCodeExpiration: {
     type: Date,
-    required: [true, "verify code expiy date is required"],
+    // required: [true, "verify code expiy date is required"],
   },
   isVerified: {
     type: Boolean,
-    default: false,
+    default: true,
+    // default: false,
   },
 });
 
