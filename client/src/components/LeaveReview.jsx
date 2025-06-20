@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import {
   Star,
@@ -6,7 +6,7 @@ import {
   AlertCircleIcon,
   CheckCircle2Icon,
 } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import config from "../config";
 
 const StarRating = ({ rating, onChange }) => {

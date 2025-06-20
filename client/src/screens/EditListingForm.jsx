@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import MainScreen from "../components/MainScreen";
 import config from "../config";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CheckCircle2Icon, XIcon } from "lucide-react";

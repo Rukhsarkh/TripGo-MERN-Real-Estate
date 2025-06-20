@@ -1,7 +1,7 @@
 import { CompassIcon, Globe, MenuIcon, Search, User } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { useWindowsize } from "../hooks/useWindowSize";
 import UserOptions from "./UserOptions";
 

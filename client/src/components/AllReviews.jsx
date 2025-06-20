@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import SentimentAnalysis from "./SentimentAnalysis";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import config from "../config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
