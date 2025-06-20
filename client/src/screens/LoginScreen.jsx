@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import MainScreen from "../components/MainScreen";
 import config from "../config";
 import { toast } from "react-toastify";

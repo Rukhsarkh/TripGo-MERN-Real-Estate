@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import MainScreen from "../components/MainScreen";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import config from "../config";
 import CategoryIconHeader from "../components/CategoryIconHeader";
 const Listings = () => {
@@ -14,8 +14,8 @@ const Listings = () => {
 
   useEffect(() => {
     fetchListings();
-    fetchUserProfile();
-  }, []);
+    isLoggedIn ? fetchUserProfile() : "";
+  }, [isLoggedIn]);
 
   const fetchListings = async () => {
     try {
