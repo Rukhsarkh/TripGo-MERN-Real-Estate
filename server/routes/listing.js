@@ -15,29 +15,51 @@ if (process.env.NODE_ENV != "production") {
 
 router.get("/search", async (req, res) => {
   try {
-    //for Pagination
+    // For Pagination
     const limit = parseInt(req.query.limit) || 9;
     const startIndex = parseInt(req.query.startIndex) || 0;
 
+    // Handle type filter
     let type = req.query.type;
     if (!type || type === "all") {
       type = { $in: ["Rent", "Sale"] };
     }
 
+    // Handle amenities filter - Fix boolean parsing
     let amenitiesQuery = {};
-    if (req.query.furnished === "true" && req.query.parking === "true") {
+    const hasFurnished = req.query.furnished === "true";
+    const hasParking = req.query.parking === "true";
+
+    if (hasFurnished && hasParking) {
       amenitiesQuery.amenities = { $all: ["Furnished", "Parking"] };
-    } else if (req.query.furnished === "true") {
+    } else if (hasFurnished) {
       amenitiesQuery.amenities = { $in: ["Furnished"] };
-    } else if (req.query.parking === "true") {
+    } else if (hasParking) {
       amenitiesQuery.amenities = { $in: ["Parking"] };
     }
 
+    // Handle search terms
     const searchTerm = req.query.searchTerm || "";
-    const sort =
-      req.query.sort_order === "regularPrice" ? "price" : "createdAt";
-    const order = req.query.order === "asc" ? -1 : 1;
     const country = req.query.country || "";
+
+    // sorting logic
+    const sortField = req.query.sort_order || "createdAt";
+    const sortOrder = req.query.order || "asc";
+
+    // Mapping frontend field names to database field names
+    const fieldMapping = {
+      regularPrice: "price",
+      createdAt: "createdAt",
+    };
+
+    const actualSortField = fieldMapping[sortField] || sortField;
+
+    // Convert order to MongoDB sort value (1 for asc, -1 for desc)
+    const mongoSortOrder = sortOrder === "asc" ? 1 : -1;
+
+    console.log(
+      `Sorting by: ${actualSortField}, Order: ${sortOrder} (${mongoSortOrder})`
+    );
 
     const listings = await Listing.find({
       title: { $regex: searchTerm, $options: "i" },
@@ -45,12 +67,13 @@ router.get("/search", async (req, res) => {
       country: { $regex: country, $options: "i" },
       ...amenitiesQuery,
     })
-      .sort({ [sort]: order })
+      .sort({ [actualSortField]: mongoSortOrder })
       .limit(limit)
       .skip(startIndex);
 
     res.status(200).json(listings);
   } catch (error) {
+    // console.error("Search error:", error);
     res.status(500).json({ message: error.message });
   }
 });

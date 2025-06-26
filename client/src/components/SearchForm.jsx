@@ -82,13 +82,14 @@ const SearchForm = ({ handleSubmit, handleOnChange, sidebarValues }) => {
         <select
           id="sort_order"
           className="border p-3"
-          defaultValue={"createdAt_asc"}
+          defaultValue={"createdAt_asc"} // Default to oldest first
           onChange={handleOnChange}
+          value={`${sidebarValues.sort_order}_${sidebarValues.order}`}
         >
-          <option value="regularPrice_desc">Price low to high</option>
-          <option value="regularPrice_asc">Price high to low</option>
-          <option value="createdAt_desc">Latest</option>
-          <option value="createdAt_asc">Oldest</option>
+          <option value="regularPrice_asc">Price low to high</option>
+          <option value="regularPrice_desc">Price high to low</option>
+          <option value="createdAt_desc">Latest (newest first)</option>
+          <option value="createdAt_asc">Oldest (oldest first)</option>
         </select>
       </div>
       <button
