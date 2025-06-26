@@ -5,41 +5,175 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import config from "../config";
 import CategoryIconHeader from "../components/CategoryIconHeader";
+import ShowError from "../ErrorPages/ShowError";
+import ListingCard from "../components/ListingCard";
+import SearchForm from "../components/SearchForm";
+
 const Listings = () => {
   const navigate = useNavigate();
   const [listings, setListings] = useState([]);
   const [username, setUsername] = useState("");
   const { isLoggedIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [sidebarValues, setSidebarValues] = useState({
+    searchTerm: "",
+    country: "",
+    type: "all",
+    parking: false,
+    furnished: false,
+    sort_order: "createdAt",
+    order: "asc",
+  });
+  const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
-    fetchListings();
+    const urlParams = new URLSearchParams(location.search);
+    // for (const [key, value] of urlParams.entries()) {
+    //   console.log(key, value);
+    // }
+
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    const countryFromUrl = urlParams.get("country");
+    const typeFromUrl = urlParams.get("type");
+    const parkingFromUrl = urlParams.get("parking");
+    const furnishedFromUrl = urlParams.get("furnished");
+    const sort_orderFromUrl = urlParams.get("sort_order");
+    const orderFromUrl = urlParams.get("order");
+
+    if (
+      searchTermFromUrl ||
+      countryFromUrl ||
+      typeFromUrl ||
+      parkingFromUrl ||
+      furnishedFromUrl ||
+      sort_orderFromUrl ||
+      orderFromUrl
+    ) {
+      setSidebarValues({
+        searchTerm: searchTermFromUrl || "",
+        country: countryFromUrl || "",
+        type: typeFromUrl || "all",
+        parking: parkingFromUrl == true ? true : false,
+        furnished: furnishedFromUrl === true ? true : false,
+        sort_order: sort_orderFromUrl || "createdAt",
+        order: orderFromUrl || "asc",
+      });
+    }
+
+    const getfilteredListings = async () => {
+      try {
+        setIsLoading(true);
+        const searchQuery = urlParams.toString();
+        const res = await axios.get(
+          `${config.API_URL}/api/listings/search?${searchQuery}`
+        );
+        const data = res.data;
+        if (data.length > 8) {
+          setShowMore(true);
+        } else {
+          setShowMore(false);
+        }
+        setListings(data);
+        setIsLoading(false);
+      } catch (error) {
+        // console.log(error);
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getfilteredListings();
+  }, [location.search]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams();
+    urlParams.set("searchTerm", sidebarValues.searchTerm);
+    urlParams.set("country", sidebarValues.country);
+    urlParams.set("type", sidebarValues.type);
+    urlParams.set("parking", sidebarValues.parking);
+    urlParams.set("furnished", sidebarValues.furnished);
+    urlParams.set("type", sidebarValues.type);
+    urlParams.set("sort_order", sidebarValues.sort_order);
+    urlParams.set("order", sidebarValues.order);
+    const searchQuery = urlParams.toString();
+    navigate(`/explore?${searchQuery}`);
+  };
+
+  const handleOnChange = (e) => {
+    if (
+      e.target.id === "all" ||
+      e.target.id === "Rent" ||
+      e.target.id === "Sale"
+    ) {
+      setSidebarValues({ ...sidebarValues, type: e.target.id });
+    }
+
+    if (e.target.id === "searchTerm") {
+      setSidebarValues({ ...sidebarValues, searchTerm: e.target.value });
+    }
+
+    if (e.target.id === "country") {
+      setSidebarValues({ ...sidebarValues, country: e.target.value });
+    }
+
+    if (e.target.id === "parking" || e.target.id === "furnished") {
+      setSidebarValues({ ...sidebarValues, [e.target.id]: e.target.checked });
+    }
+
+    if (e.target.id === "sort_order") {
+      const sort = e.target.value.split("_")[0] || "createdAt";
+      const order = e.target.value.split("_")[1] || "asc";
+      setSidebarValues({ ...sidebarValues, sort_order: sort, order: order });
+    }
+  };
+
+  const onShowMoreClick = async () => {
+    const numberOfListings = listings.length;
+    console.log(numberOfListings);
+    const startIndex = numberOfListings;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await axios.get(
+      `${config.API_URL}/api/listings/search?${searchQuery}`
+    );
+    const data = res.data;
+    console.log("Show more Click data:", data);
+    if (data.length < 9) {
+      setShowMore(false);
+    }
+    setListings([...listings, ...data]);
+  };
+
+  useEffect(() => {
+    // fetchListings();
     isLoggedIn ? fetchUserProfile() : "";
   }, [isLoggedIn]);
 
-  const fetchListings = async () => {
-    try {
-      setIsLoading(true);
-      const response = await axios.get(`${config.API_URL}/api/listings/posts`, {
-        withCredentials: true,
-      });
-      console.log(response.data);
-      setListings(response.data);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error fetching Listings", error);
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const fetchListings = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const response = await axios.get(`${config.API_URL}/api/listings/posts`, {
+  //       withCredentials: true,
+  //     });
+  //     // console.log(response.data);
+  //     setListings(response.data);
+  //     setIsLoading(false);
+  //   } catch (error) {
+  //     // console.error("Error fetching Listings", error);
+  //     setIsLoading(false);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(`${config.API_URL}/user/get-profile`, {
         withCredentials: true,
       });
-      console.log(response.data);
       setUsername(response.data.username);
     } catch (error) {
       console.error(error);
@@ -56,74 +190,43 @@ const Listings = () => {
               : `Welcome To TripGo ! Login Please`
           }
         >
-          {isLoading ? (
-            <div className="flex items-center justify-center h-[60vh]">
-              <div className="text-2xl md:text-4xl text-gray-400 font-thin animate-pulse">
-                Loading...
+          <>
+            {/* <CategoryIconHeader /> */}
+            <div className="flex flex-col md:flex-row">
+              <div className="w-full lg:w-1/4 p-7 border-b-2 md:border-r-2 md:min-h-screen">
+                <SearchForm
+                  handleOnChange={handleOnChange}
+                  handleSubmit={handleSubmit}
+                  sidebarValues={sidebarValues}
+                />
               </div>
-            </div>
-          ) : listings.length === 0 ? (
-            <div className="flex flex-col max-xl:items-center max-xl:justify-center h-[60vh] max-xl:text-center lg:mt-10 lg:ml-5">
-              <div className="text-2xl md:text-4xl lg:text-5xl text-gray-300 font-thin mb-8">
-                No Listings Available Yet ! Be the First To upload
-              </div>
-              <img
-                src="../helloThere.svg"
-                className="w-52 h-52 md:w-64 md:h-64 lg:w-80 lg:h-80 opacity-50"
-                alt="No listings"
-              />
-            </div>
-          ) : (
-            <div>
-              <CategoryIconHeader />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-4">
-                {listings.map((listing) => (
-                  <div
-                    key={listing._id}
-                    className="bg-white rounded-3xl border border-gray-200 hover:border-primary transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 cursor-pointer overflow-hidden"
-                    onClick={() => navigate(`/show-List/${listing._id}`)}
-                  >
-                    <div className="aspect-w-16 aspect-h-12 relative">
-                      <img
-                        src={listing.image?.url || listing.image}
-                        alt={listing.title}
-                        className="w-full h-64 object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-
-                    <div className="p-4 space-y-3">
-                      <div className="flex justify-between items-start">
-                        <h2 className="font-semibold text-lg text-gray-800">
-                          {listing.title}
-                        </h2>
-                      </div>
-
-                      <p className="text-gray-600 text-sm">
-                        {listing.description}
-                      </p>
-
-                      <div className="flex items-center text-gray-500 text-sm">
-                        <span className="line-clamp-1">
-                          {listing.location}, {listing.country}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                        <div className="flex items-center text-primary font-semibold gap-1">
-                          &#8377;
-                          <span>{listing.price.toLocaleString("en-IN")}</span>
-                          <span className="text-gray-500 font-normal ml-1">
-                            /night
-                          </span>
-                        </div>
-                      </div>
+              <div className="w-full">
+                {isLoading ? (
+                  <div className="lg:fixed lg:inset-0 flex items-center justify-center h-[60vh] lg:h-screen">
+                    <div className="text-2xl md:text-4xl text-gray-400 font-thin animate-pulse">
+                      Loading...
                     </div>
                   </div>
-                ))}
+                ) : !isLoading && listings.length === 0 ? (
+                  <ShowError />
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 items-start gap-6 mt-7 md:pl-4 lg:pl-8 gap-y-20">
+                    {listings.map((listing) => (
+                      <ListingCard listing={listing} key={listing._id} />
+                    ))}
+                  </div>
+                )}
+                {showMore && (
+                  <button
+                    onClick={onShowMoreClick}
+                    className="text-green-700 hover:underline p-7 text-center w-full"
+                  >
+                    Show more
+                  </button>
+                )}
               </div>
             </div>
-          )}
+          </>
         </MainScreen>
       </section>
     </div>

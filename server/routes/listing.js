@@ -1,9 +1,9 @@
-import express from "express";
-import Listing from "../models/listing.js";
-const router = express.Router();
-import multer from "multer";
 import dotenv from "dotenv";
+import express from "express";
+const router = express.Router();
+import Listing from "../models/listing.js";
 import storage from "../CloudConfig.js";
+import multer from "multer";
 const upload = multer({ storage });
 import { isLoggedIn, isOwner } from "../middleware/auth.js";
 import mbxGeoCoding from "@mapbox/mapbox-sdk/services/geocoding.js";
@@ -12,6 +12,48 @@ const geoCodingClient = mbxGeoCoding({ accessToken: process.env.MAP_TOKEN });
 if (process.env.NODE_ENV != "production") {
   dotenv.config();
 }
+
+router.get("/search", async (req, res) => {
+  try {
+    //for Pagination
+    const limit = parseInt(req.query.limit) || 9;
+    const startIndex = parseInt(req.query.startIndex) || 0;
+
+    let type = req.query.type;
+    if (!type || type === "all") {
+      type = { $in: ["Rent", "Sale"] };
+    }
+
+    let amenitiesQuery = {};
+    if (req.query.furnished === "true" && req.query.parking === "true") {
+      amenitiesQuery.amenities = { $all: ["Furnished", "Parking"] };
+    } else if (req.query.furnished === "true") {
+      amenitiesQuery.amenities = { $in: ["Furnished"] };
+    } else if (req.query.parking === "true") {
+      amenitiesQuery.amenities = { $in: ["Parking"] };
+    }
+
+    const searchTerm = req.query.searchTerm || "";
+    const sort =
+      req.query.sort_order === "regularPrice" ? "price" : "createdAt";
+    const order = req.query.order === "asc" ? -1 : 1;
+    const country = req.query.country || "";
+
+    const listings = await Listing.find({
+      title: { $regex: searchTerm, $options: "i" },
+      type,
+      country: { $regex: country, $options: "i" },
+      ...amenitiesQuery,
+    })
+      .sort({ [sort]: order })
+      .limit(limit)
+      .skip(startIndex);
+
+    res.status(200).json(listings);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 router.post("/create", isLoggedIn, upload.single("image"), async (req, res) => {
   try {
@@ -22,7 +64,7 @@ router.post("/create", isLoggedIn, upload.single("image"), async (req, res) => {
       })
       .send();
 
-    console.log(response.body.features[0].geometry.coordinates);
+    // console.log(response.body.features[0].geometry.coordinates);
 
     if (!req.user) {
       return res.status(401).json({ message: "User not authenticated" });
@@ -134,7 +176,8 @@ router.put(
     }
   }
 );
-router.get("/posts", async (req, res) => {
+
+router.get("/posts", async (_, res) => {
   try {
     const allListings = await Listing.find().populate(
       "author",

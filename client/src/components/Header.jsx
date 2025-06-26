@@ -99,7 +99,10 @@ const Header = () => {
             onFocus={() => setExpandable(true)}
             onBlur={() => setExpandable(false)}
           />
-          <div className="bg-inherit text-white gap-2 inline-flex items-center">
+          <div
+            className="bg-inherit text-white gap-2 inline-flex items-center hover:cursor-pointer"
+            onClick={() => navigate("/explore")}
+          >
             <Search className="cursor-pointer size-5 lg:size-6" />
             <p className="text-xl">Search</p>
           </div>

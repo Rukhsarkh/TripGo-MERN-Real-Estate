@@ -77,9 +77,13 @@ router.get("/logout", (req, res, next) => {
 
 router.get("/get-profile", isLoggedIn, async (req, res) => {
   try {
-    console.log("Session:", req.session);
-    console.log("User object:", req.user);
-    console.log("Session user ID:", req.session.userID);
+    // console.log("****************************************");
+    // console.log("Session:", req.session);
+    // console.log("****************************************");
+    // console.log("User object:", req.user);
+    // console.log("****************************************");
+    // console.log("Session user ID:", req.session.userID);
+    // console.log("****************************************");
 
     // First try to get user from passport's req.user
     let userId = req.user?._id;
@@ -103,7 +107,9 @@ router.get("/get-profile", isLoggedIn, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("Found user:", user);
+    // console.log("*******************************");
+    // console.log("Found user:", user);
+    // console.log("****************************************");
 
     res.json({
       username: user.username,

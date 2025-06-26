@@ -15,7 +15,7 @@ const CommonHeader = () => {
   const userButtonRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = () => {
+    const handleClickOutside = (event) => {
       if (
         userOptionsRef.current &&
         !userOptionsRef.current.contains(event.target) &&
@@ -49,7 +49,9 @@ const CommonHeader = () => {
             }}
           >
             <CompassIcon className="text-primary cursor-pointer" />
-            <p className="cursor-pointer font-thin text-xl">TripGO</p>
+            <p className="cursor-pointer font-thin text-xl xl:text-2xl">
+              TripGO
+            </p>
           </div>
           {isMid && (
             <div className="relative">
