@@ -123,9 +123,21 @@ const Listings = () => {
     }
 
     if (e.target.id === "sort_order") {
-      const sort = e.target.value.split("_")[0] || "createdAt";
-      const order = e.target.value.split("_")[1] || "asc";
-      setSidebarValues({ ...sidebarValues, sort_order: sort, order: order });
+      const sortValue = e.target.value;
+      // console.log("Selected sort value:", sortValue);
+
+      // Parse the sort field and order
+      const parts = sortValue.split("_"); //-> [createdAt, asc]
+      const sort = parts[0] || "createdAt";
+      const order = parts[1] || "asc";
+
+      // console.log("Parsed sort:", sort, "order:", order);
+
+      setSidebarValues({
+        ...sidebarValues,
+        sort_order: sort,
+        order: order,
+      });
     }
   };
 
@@ -213,6 +225,7 @@ const Listings = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 items-start gap-6 mt-7 md:pl-4 lg:pl-8 gap-y-20">
                     {listings.map((listing) => (
                       <ListingCard listing={listing} key={listing._id} />
+                      //key is set inside the parent component
                     ))}
                   </div>
                 )}

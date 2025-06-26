@@ -1,11 +1,12 @@
 import { MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const ListingCard = ({ listing, key }) => {
+const ListingCard = ({ listing }) => {
   let navigate = useNavigate();
+
   return (
     <div
-      key={key}
+      //shoudn't use key={key} because key is used by react for reconciliation process
       className="bg-white border border-gray-200 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 cursor-pointer overflow-hidden"
       onClick={() => navigate(`/show-List/${listing._id}`)}
     >
@@ -25,7 +26,7 @@ const ListingCard = ({ listing, key }) => {
           </h2>
           <div
             className={`px-4 py-2 text-sm md:text-base rounded-lg hover:cursor-default ${
-              listing.type == "Sale"
+              listing.type === "Sale"
                 ? "bg-green-50 text-green-600"
                 : "bg-red-50 text-red-600"
             }`}
@@ -50,18 +51,18 @@ const ListingCard = ({ listing, key }) => {
           <div className="flex items-center text-primary font-semibold">
             <span>&#36;{listing.price.toLocaleString("en-IN")}</span>
             <span className="text-gray-500 font-extralight ml-1">
-              {listing.type == "Rent" ? "/night" : ""}
+              {listing.type === "Rent" ? "/night" : ""}
             </span>
           </div>
           <div className="flex lg:flex-wrap items-center gap-1">
-            {listing.amenities.map((el) => {
+            {listing.amenities?.map((el, index) => {
               return (
                 <div
                   className="px-2 md:px-4 py-2 text-sm md:font-semibold rounded-lg hover:cursor-default bg-blue-50 text-blue-400"
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
-                  key={el}
+                  key={`${el}-${index}`} //el-0 el-1 el-2
                 >
                   {el}
                 </div>
