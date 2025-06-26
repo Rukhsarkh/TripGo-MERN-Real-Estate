@@ -42,6 +42,7 @@ const validationSchema = Yup.object().shape({
   country: Yup.string()
     .required("Country is required")
     .min(2, "Country must be at least 2 characters"),
+  type: Yup.string().required("Type is required, Select 1"),
 });
 
 const NewListingForm = () => {
@@ -54,6 +55,8 @@ const NewListingForm = () => {
     price: "",
     location: "",
     country: "",
+    type: "",
+    amenities: [],
   };
 
   const ImagePreview = () => {
@@ -81,7 +84,11 @@ const NewListingForm = () => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formDataToSend = new FormData();
     Object.keys(values).forEach((key) => {
-      formDataToSend.append(key, values[key]);
+      if (key === "amenities" && Array.isArray(values[key])) {
+        values[key].forEach((el) => formDataToSend.append("amenities", el));
+      } else {
+        formDataToSend.append(key, values[key]);
+      }
     });
 
     try {
@@ -233,7 +240,7 @@ const NewListingForm = () => {
                       <Field
                         type="number"
                         name="price"
-                        placeholder="Enter price"
+                        placeholder="Enter price ( in $ )"
                         className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
                       />
                       <ErrorMessage
@@ -281,6 +288,62 @@ const NewListingForm = () => {
                       component="div"
                       className="text-red-500 text-sm mt-1"
                     />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Type
+                      </label>
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        {["Sale", "Rent"].map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <Field
+                              type="radio"
+                              name="type"
+                              value={option}
+                              className="appearance-none w-4 h-4 border-2 border-gray-300 rounded-full checked:bg-primary checked:border-primary"
+                            />
+                            <span>{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                      <ErrorMessage
+                        name="type"
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Amenities
+                      </label>
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        {["Parking", "Furnished"].map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <Field
+                              type="checkbox"
+                              name="amenities"
+                              value={option}
+                              className="appearance-none w-5 h-5 border-2 border-gray-300 rounded-sm checked:bg-primary checked:border-primary"
+                            />
+                            <span>{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                      <ErrorMessage
+                        name="amenities"
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
+                      />
+                    </div>
                   </div>
 
                   <div>

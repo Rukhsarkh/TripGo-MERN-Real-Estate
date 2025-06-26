@@ -114,13 +114,16 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.send("aPi is running ....");
 });
 
-app.use((req, res, next) => {
-  console.log("Session-Id", req.session.id);
-  console.log("Session", req.session);
+app.use((req, _, next) => {
+  // console.log("****************************************");
+  // console.log("Session-Id", req.session.id);
+  // console.log("****************************************");
+  // console.log("Session", req.session);
+  // console.log("****************************************");
   next();
 });
 
