@@ -8,7 +8,7 @@ const SearchForm = ({ handleSubmit, handleOnChange, sidebarValues }) => {
             type="text"
             id="searchTerm"
             placeholder="Search By Name..."
-            className="border p-3 w-full"
+            className="border p-3 w-full outline-none"
             onChange={handleOnChange}
           />
         </div>
@@ -18,7 +18,7 @@ const SearchForm = ({ handleSubmit, handleOnChange, sidebarValues }) => {
             type="text"
             id="country"
             placeholder="Country"
-            className="border p-3 w-full"
+            className="border p-3 w-full outline-none"
             onChange={handleOnChange}
           />
         </div>
@@ -56,7 +56,7 @@ const SearchForm = ({ handleSubmit, handleOnChange, sidebarValues }) => {
           <span>Sale</span>
         </div>
       </div>
-      <div className="flex gap-2 flex-wrap items-center">
+      <div className="flex gap-2 max-xl:flex-wrap items-center">
         <label className="font-semibold">Amenities:</label>
         <div className="flex gap-2">
           <input
@@ -77,12 +77,12 @@ const SearchForm = ({ handleSubmit, handleOnChange, sidebarValues }) => {
           <span>Furnished</span>
         </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <label className="font-semibold">Sort:</label>
         <select
           id="sort_order"
-          className="border p-3"
-          defaultValue={"createdAt_asc"} // Default to oldest first
+          className="border p-3 outline-none"
+          // defaultValue={"createdAt_asc"} // Default to oldest first
           onChange={handleOnChange}
           value={`${sidebarValues.sort_order}_${sidebarValues.order}`}
         >
@@ -93,7 +93,7 @@ const SearchForm = ({ handleSubmit, handleOnChange, sidebarValues }) => {
         </select>
       </div>
       <button
-        className="bg-primary text-white py-2 rounded-md text-lg hover:opacity-95 active:translate-y-0.5 
+        className="bg-primary text-white py-2 text-lg hover:opacity-95 active:translate-y-0.5 
               transition-all duration-300 ease-in-out"
       >
         Search

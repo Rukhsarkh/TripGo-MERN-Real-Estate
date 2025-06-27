@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
-import "../popup.css";
 
 const ShowMap = ({ locationCoordinates, locationName, locationImage }) => {
   const mapContainerRef = useRef();
@@ -39,7 +38,7 @@ const ShowMap = ({ locationCoordinates, locationName, locationImage }) => {
   return (
     <div
       ref={mapContainerRef}
-      className="w-full h-[60vh] lg:rounded-3xl shadow-lg shadow-gray-500 p-2"
+      className="w-full h-[40vh] lg:h-[60vh] shadow-lg shadow-gray-500"
     />
   );
 };

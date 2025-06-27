@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -93,7 +92,7 @@ const LoginScreen = () => {
       <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-between">
         <div className="w-full lg:w-1/2 max-w-md">
           <MainScreen title="Login">
-            <div className="bg-white rounded-xl shadow-2xl px-8 py-4 mt-2 shadow-gray-500">
+            <div className="bg-white shadow-2xl px-8 py-4 mt-2 shadow-gray-500">
               <Formik
                 initialValues={{ email: "", password: "" }}
                 validationSchema={validationSchema}
@@ -102,7 +101,7 @@ const LoginScreen = () => {
                 {({ isSubmitting, errors }) => (
                   <Form className="space-y-6" noValidate>
                     {errors.submit && (
-                      <div className="mb-6 p-4 rounded-md bg-red-100 text-red-700">
+                      <div className="mb-6 p-4 bg-red-100 text-red-700">
                         {errors.submit}
                       </div>
                     )}

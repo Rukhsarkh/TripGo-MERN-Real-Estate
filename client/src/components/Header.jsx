@@ -68,7 +68,7 @@ const Header = () => {
             <div className="relative">
               <div
                 ref={userButtonRef}
-                className="relative w-20 h-10 bg-inherit rounded-3xl inline-flex items-center gap-3 p-2 cursor-pointer shadow-gray-400 shadow-inner active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:shadow-lg hover:shadow-gray-400"
+                className="relative w-20 h-10 bg-inherit inline-flex items-center gap-3 p-2 cursor-pointer shadow-gray-400 shadow-inner active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:shadow-lg hover:shadow-gray-400"
                 onClick={handleOnClick}
               >
                 <MenuIcon size={32} className="text-gray-300" />
@@ -115,7 +115,7 @@ const Header = () => {
               <div className="relative">
                 <div
                   ref={userButtonRef}
-                  className="relative w-20 h-10 bg-inherit rounded-3xl inline-flex items-center gap-3 p-2 cursor-pointer shadow-gray-400 shadow-inner active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:shadow-lg hover:shadow-gray-400"
+                  className="relative w-20 h-10 bg-inherit inline-flex items-center gap-3 p-2 cursor-pointer shadow-gray-400 shadow-inner active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:shadow-lg hover:shadow-gray-400"
                   onClick={handleOnClick}
                 >
                   <MenuIcon size={32} className="text-gray-300" />
@@ -135,7 +135,7 @@ const Header = () => {
               </div>
 
               <div
-                className="cursor-pointer inline-flex items-center gap-2 font-thin text-xl lg:text-2xl max-lg:rounded-3xl max-lg:p-3 max-lg:bg-white/50"
+                className="cursor-pointer inline-flex items-center gap-2 font-thin text-xl lg:text-2xl max-lg:p-3 max-lg:bg-white/50"
                 onClick={() => {
                   // Check authentication before navigating
                   if (!isLoggedIn) {

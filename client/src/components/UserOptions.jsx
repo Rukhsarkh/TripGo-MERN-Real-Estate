@@ -27,7 +27,12 @@ const UserOptions = ({ isLoggedIn, logout }) => {
           </div>
           <hr />
           <div className="flex flex-col gap-2">
-            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
+            <button
+              className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
+              onClick={() => {
+                navigate("/account");
+              }}
+            >
               Account
             </button>
             <button

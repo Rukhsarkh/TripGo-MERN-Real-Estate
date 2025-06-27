@@ -159,7 +159,7 @@ const VerificationScreen = () => {
           <p className="mb-4">Please sign up first to verify your email.</p>
           <button
             onClick={() => navigate("/signup")}
-            className="bg-primary text-white px-4 py-2 rounded-lg"
+            className="bg-primary text-white px-4 py-2"
           >
             Go to Sign Up
           </button>
@@ -170,7 +170,7 @@ const VerificationScreen = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 bg-[radial-gradient(circle_at_50%_120%,rgba(239,68,68,0.1),rgba(156,163,175,0.1))]">
-      <div className="max-w-md w-full mx-4 space-y-8 p-2 py-4 sm:p-8 bg-white rounded-xl shadow-2xl mt-48 xl:m-20 shadow-gray-400">
+      <div className="max-w-md w-full mx-4 space-y-8 p-2 py-4 sm:p-8 bg-white shadow-2xl mt-48 xl:m-20 shadow-gray-400">
         <div className="text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
             Verify Your Email
@@ -182,7 +182,7 @@ const VerificationScreen = () => {
 
         {message && (
           <div
-            className={`p-4 rounded-md ${
+            className={`p-4 ${
               message.includes("Error")
                 ? "bg-red-100 text-red-700"
                 : "bg-green-100 text-green-700"
@@ -202,7 +202,7 @@ const VerificationScreen = () => {
                 value={digit}
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-10 h-10 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-semibold border-2 rounded-lg focus:border-primary focus:outline-none"
+                className="w-10 h-10 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-semibold border-2 focus:border-primary focus:outline-none"
                 maxLength={1}
                 pattern="[0-9]"
                 inputMode="numeric"
@@ -216,7 +216,7 @@ const VerificationScreen = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+              className="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
             >
               {loading ? "Verifying..." : "Verify Email"}
             </button>
