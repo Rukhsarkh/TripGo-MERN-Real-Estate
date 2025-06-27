@@ -298,7 +298,7 @@ const NewListingForm = () => {
                                 type="radio"
                                 name="type"
                                 value={option}
-                                className="appearance-none w-4 h-4 border-2 border-gray-300 rounded-full"
+                                className="w-4 h-4 border-2 border-gray-300 rounded-full"
                               />
                               <span className="text-sm">{option}</span>
                             </label>
