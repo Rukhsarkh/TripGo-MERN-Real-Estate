@@ -19,7 +19,7 @@ const LandingPage = () => {
             Place to Stay, But a Moment to Truly Live ❞
           </p>
           <button
-            className="cursor-pointer text-xl inline-flex items-center gap-2 p-2 font-extrabold lg:p-3 rounded-lg hover:shadow-md hover:shadow-white shadow-inner shadow-white active:translate-y-2 transition-all duration-500 ease-linear hover:scale-105"
+            className="cursor-pointer text-xl inline-flex items-center gap-2 p-2 font-extrabold lg:p-3 hover:shadow-md hover:shadow-white shadow-inner shadow-white active:translate-y-2 transition-all duration-100"
             onClick={() => {
               navigate("/explore");
             }}

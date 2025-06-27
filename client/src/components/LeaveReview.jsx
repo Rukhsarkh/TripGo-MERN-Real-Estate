@@ -131,15 +131,15 @@ const LeaveReview = ({ listingId }) => {
   };
 
   return (
-    <div className="w-full max-w-5xl bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-6">
+    <div className="w-full max-w-5xl bg-white shadow-lg p-5 md:p-8">
       <h2 className="text-2xl md:text-3xl font-bold max-lg:text-center text-gray-800 mb-4">
-        Share Your Experience
+        Leave Review
       </h2>
 
       {message && (
         <div
           className={`
-            flex items-center gap-3 p-4 rounded-lg text-sm md:text-base 
+            flex items-center gap-3 p-4 text-sm md:text-base 
             ${
               messageType === "success"
                 ? "bg-green-50 text-green-700"
@@ -156,7 +156,7 @@ const LeaveReview = ({ listingId }) => {
         </div>
       )}
 
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <form className="space-y-2" onSubmit={handleSubmit}>
         <div className="space-y-2">
           <label
             htmlFor="rating"
@@ -183,13 +183,11 @@ const LeaveReview = ({ listingId }) => {
             rows="5"
             maxLength={500}
             className="
-              w-full border-2 rounded-lg p-4 
+              w-full border-2 p-4 
               text-sm md:text-base 
-              border-gray-300 focus:border-primary 
-              focus:ring-2 focus:ring-primary/30 
-              transition-all duration-300 
-              resize-none
+              border-gray-300
               placeholder:text-gray-400
+              outline-none
             "
           />
           <div className="text-right text-xs text-gray-500">
@@ -205,7 +203,6 @@ const LeaveReview = ({ listingId }) => {
               flex items-center justify-center 
               px-6 py-3 
               bg-primary text-white 
-              rounded-lg 
               hover:bg-primary/90 
               active:translate-y-0.5 
               transition-all duration-300 ease-in-out

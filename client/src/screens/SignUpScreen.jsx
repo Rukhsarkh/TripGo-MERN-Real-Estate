@@ -1,4 +1,3 @@
-import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import MainScreen from "../components/MainScreen";
@@ -107,7 +106,7 @@ const SignUpScreen = () => {
       <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-between">
         <div className="w-full lg:w-1/2 max-w-md">
           <MainScreen title="Sign Up">
-            <div className="bg-white rounded-xl shadow-2xl px-8 py-4 mt-2 shadow-gray-500">
+            <div className="bg-white shadow-2xl px-8 py-4 mt-2 shadow-gray-500">
               <Formik
                 initialValues={{
                   username: "",
@@ -120,7 +119,7 @@ const SignUpScreen = () => {
                 {({ isSubmitting, status }) => (
                   <Form className="space-y-6">
                     {status && (
-                      <div className="mb-6 p-4 rounded-md bg-green-100 text-green-700">
+                      <div className="mb-6 p-4 bg-green-100 text-green-700">
                         {status}
                       </div>
                     )}

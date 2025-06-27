@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -178,10 +178,10 @@ const EditListingForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-14 sm:pt-8 md:pt-0">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+    <div className="h-screen bg-gray-50 pt-4 xl:overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full">
         <MainScreen title={"Edit Your Property Listing"}>
-          <div className="bg-white rounded-xl shadow-2xl shadow-gray-500 p-6 sm:p-8 mt-4">
+          <div className="bg-white shadow-2xl shadow-gray-500 p-3 sm:p-4 mt-1">
             <Formik
               initialValues={initialFormData}
               validationSchema={ListingValidationSchema}
@@ -189,165 +189,184 @@ const EditListingForm = () => {
               enableReinitialize
             >
               {({ setFieldValue, isSubmitting, values }) => (
-                <Form className="space-y-6">
-                  {/* Title Field */}
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="title"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Title
-                    </label>
-                    <Field
-                      type="text"
-                      id="title"
-                      name="title"
-                      placeholder="Enter title"
-                      className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                    />
-                    <ErrorMessage
-                      name="title"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Description Field */}
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="description"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Description
-                    </label>
-                    <Field
-                      as="textarea"
-                      id="description"
-                      name="description"
-                      placeholder="Enter description"
-                      rows="4"
-                      className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                    />
-                    <ErrorMessage
-                      name="description"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Image Upload */}
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="image"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Image
-                    </label>
-                    <input
-                      type="file"
-                      id="image"
-                      name="image"
-                      accept="image/*"
-                      onChange={(event) =>
-                        handleImageUpload(setFieldValue, event)
-                      }
-                      className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                    />
-                    <ErrorMessage
-                      name="image"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                    {imagePreview && (
-                      <div className="mt-2">
-                        <img
-                          src={imagePreview}
-                          alt="Current listing"
-                          className="w-full h-auto rounded-lg object-cover max-h-60"
+                <Form className="h-full">
+                  {/* Grid layout, No scrollbar */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+                    {/* First Column: Title, Description (6 cols) */}
+                    <div className="lg:col-span-6 space-y-3">
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="title"
+                          className="block text-xs font-medium text-gray-700"
+                        >
+                          Title
+                        </label>
+                        <Field
+                          type="text"
+                          id="title"
+                          name="title"
+                          placeholder="Enter title"
+                          className="w-full border-2 p-2 text-sm outline-none"
                         />
+                        <div className="h-3">
+                          <ErrorMessage
+                            name="title"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
                       </div>
-                    )}
-                  </div>
 
-                  {/* Price and Country Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="price"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Price
-                      </label>
-                      <Field
-                        type="number"
-                        id="price"
-                        name="price"
-                        placeholder="Enter price"
-                        className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                      />
-                      <ErrorMessage
-                        name="price"
-                        component="div"
-                        className="text-red-500 text-sm mt-1"
-                      />
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="description"
+                          className="block text-xs font-medium text-gray-700"
+                        >
+                          Description
+                        </label>
+                        <Field
+                          as="textarea"
+                          id="description"
+                          name="description"
+                          placeholder="Enter description"
+                          rows="6"
+                          className="w-full border-2 p-2 text-sm resize-none outline-none"
+                        />
+                        <div className="h-3">
+                          <ErrorMessage
+                            name="description"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Location Field - moved to first column */}
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="location"
+                          className="block text-xs font-medium text-gray-700"
+                        >
+                          Location
+                        </label>
+                        <Field
+                          type="text"
+                          id="location"
+                          name="location"
+                          placeholder="Enter location (City or State)"
+                          className="w-full border-2 p-2 text-sm outline-none"
+                        />
+                        <div className="h-3">
+                          <ErrorMessage
+                            name="location"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="country"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Country
-                      </label>
-                      <Field
-                        type="text"
-                        id="country"
-                        name="country"
-                        placeholder="Enter country"
-                        className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                      />
-                      <ErrorMessage
-                        name="country"
-                        component="div"
-                        className="text-red-500 text-sm mt-1"
-                      />
+
+                    {/* Second Column: Price, Country and Submit Button (6 cols) */}
+                    <div className="lg:col-span-6 space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div className="space-y-1">
+                          <label
+                            htmlFor="price"
+                            className="block text-xs font-medium text-gray-700"
+                          >
+                            Price
+                          </label>
+                          <Field
+                            type="number"
+                            id="price"
+                            name="price"
+                            placeholder="Enter price ( in $ )"
+                            className="w-full border-2 p-2 text-sm outline-none"
+                          />
+                          <div className="h-3">
+                            <ErrorMessage
+                              name="price"
+                              component="div"
+                              className="text-red-500 text-xs"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-1">
+                          <label
+                            htmlFor="country"
+                            className="block text-xs font-medium text-gray-700"
+                          >
+                            Country
+                          </label>
+                          <Field
+                            type="text"
+                            id="country"
+                            name="country"
+                            placeholder="Enter country"
+                            className="w-full border-2 p-2 text-sm outline-none"
+                          />
+                          <div className="h-3">
+                            <ErrorMessage
+                              name="country"
+                              component="div"
+                              className="text-red-500 text-xs"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Image Upload */}
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="image"
+                          className="block text-xs font-medium text-gray-700"
+                        >
+                          Image
+                        </label>
+                        <input
+                          type="file"
+                          id="image"
+                          name="image"
+                          accept="image/*"
+                          onChange={(event) =>
+                            handleImageUpload(setFieldValue, event)
+                          }
+                          className="w-full border-2 p-2 text-sm outline-none"
+                        />
+                        <div className="h-3">
+                          <ErrorMessage
+                            name="image"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
+                        {imagePreview && (
+                          <div className="mt-1">
+                            <img
+                              src={imagePreview}
+                              alt="Current listing"
+                              className="w-full h-64 object-cover "
+                            />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Submit Button */}
+                      <div className="pt-2">
+                        <button
+                          className="btn-essential flex items-center justify-center w-full py-2 text-sm"
+                          type="submit"
+                          disabled={isSubmitting || isLoading}
+                        >
+                          {isSubmitting || isLoading ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                          ) : (
+                            "Update Listing"
+                          )}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Location Field */}
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="location"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Location
-                    </label>
-                    <Field
-                      type="text"
-                      id="location"
-                      name="location"
-                      placeholder="Enter location (City or State)"
-                      className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                    />
-                    <ErrorMessage
-                      name="location"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <div>
-                    <button
-                      className="btn-essential flex items-center justify-center"
-                      type="submit"
-                      disabled={isSubmitting || isLoading}
-                    >
-                      {isSubmitting || isLoading ? (
-                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                      ) : (
-                        "Update Listing"
-                      )}
-                    </button>
                   </div>
                 </Form>
               )}

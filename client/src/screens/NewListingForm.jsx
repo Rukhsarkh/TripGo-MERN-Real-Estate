@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import MainScreen from "../components/MainScreen";
@@ -73,11 +73,13 @@ const NewListingForm = () => {
     }, [values.image]);
 
     return preview ? (
-      <img
-        src={URL.createObjectURL(values.image)}
-        alt="image-preview"
-        className="preview-image"
-      />
+      <div className="mt-2">
+        <img
+          src={URL.createObjectURL(values.image)}
+          alt="image-preview"
+          className="w-full h-64 object-cover"
+        />
+      </div>
     ) : null;
   };
 
@@ -153,211 +155,234 @@ const NewListingForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-14 sm:pt-8 md:pt-0">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+    <div className="min-h-screen bg-gray-50 pt-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <MainScreen title={"List Your Property"}>
-          <div className="bg-white rounded-xl shadow-2xl shadow-gray-500 p-6 sm:p-8 mt-4">
+          <div className="bg-white shadow-2xl shadow-gray-500 p-4 sm:p-6 mt-2">
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
               {({ isSubmitting, setFieldValue }) => (
-                <Form className="space-y-6">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="title"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Title
-                    </label>
-                    <Field
-                      type="text"
-                      name="title"
-                      placeholder="Enter title"
-                      className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                    />
-                    <ErrorMessage
-                      name="title"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="description"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Description
-                    </label>
-                    <Field
-                      as="textarea"
-                      name="description"
-                      placeholder="Enter description"
-                      rows="4"
-                      className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                    />
-                    <ErrorMessage
-                      name="description"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="image"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Image
-                    </label>
-                    <input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      onChange={(e) => {
-                        setFieldValue("image", e.target.files[0]);
-                      }}
-                      className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                    />
-                    <ImagePreview />
-                    <ErrorMessage
-                      name="image"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="price"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Price
-                      </label>
-                      <Field
-                        type="number"
-                        name="price"
-                        placeholder="Enter price ( in $ )"
-                        className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                      />
-                      <ErrorMessage
-                        name="price"
-                        component="div"
-                        className="text-red-500 text-sm mt-1"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="country"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Country
-                      </label>
-                      <Field
-                        type="text"
-                        name="country"
-                        placeholder="Enter country"
-                        className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                      />
-                      <ErrorMessage
-                        name="country"
-                        component="div"
-                        className="text-red-500 text-sm mt-1"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="location"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Location
-                    </label>
-                    <Field
-                      type="text"
-                      name="location"
-                      placeholder="Enter location ( City or State )"
-                      className="w-full border-2 rounded-lg p-2 focus:ring-primary focus:border-primary"
-                    />
-                    <ErrorMessage
-                      name="location"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Type
-                      </label>
-                      <div className="flex flex-col sm:flex-row gap-4">
-                        {["Sale", "Rent"].map((option) => (
-                          <label
-                            key={option}
-                            className="flex items-center space-x-2 cursor-pointer"
-                          >
-                            <Field
-                              type="radio"
-                              name="type"
-                              value={option}
-                              className="appearance-none w-4 h-4 border-2 border-gray-300 rounded-full checked:bg-primary checked:border-primary"
-                            />
-                            <span>{option}</span>
-                          </label>
-                        ))}
+                <Form className="h-full">
+                  {/* Grid layou , no scrollbar */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
+                    {/* First Column: Title, Description (4 cols) */}
+                    <div className="lg:col-span-4 space-y-4">
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="title"
+                          className="block text-xs font-medium text-gray-700"
+                        >
+                          Title
+                        </label>
+                        <Field
+                          type="text"
+                          name="title"
+                          placeholder="Enter title"
+                          className="w-full border-2 p-2 text-sm outline-none"
+                        />
+                        <div className="h-4">
+                          <ErrorMessage
+                            name="title"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
                       </div>
-                      <ErrorMessage
-                        name="type"
-                        component="div"
-                        className="text-red-500 text-sm mt-1"
-                      />
-                    </div>
 
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Amenities
-                      </label>
-                      <div className="flex flex-col sm:flex-row gap-4">
-                        {["Parking", "Furnished"].map((option) => (
-                          <label
-                            key={option}
-                            className="flex items-center space-x-2 cursor-pointer"
-                          >
-                            <Field
-                              type="checkbox"
-                              name="amenities"
-                              value={option}
-                              className="appearance-none w-5 h-5 border-2 border-gray-300 rounded-sm checked:bg-primary checked:border-primary"
-                            />
-                            <span>{option}</span>
-                          </label>
-                        ))}
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="description"
+                          className="block text-xs font-medium text-gray-700"
+                        >
+                          Description
+                        </label>
+                        <Field
+                          as="textarea"
+                          name="description"
+                          placeholder="Enter description"
+                          rows="8"
+                          className="w-full border-2 p-2 text-sm resize-none outline-none"
+                        />
+                        <div className="h-4">
+                          <ErrorMessage
+                            name="description"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
                       </div>
-                      <ErrorMessage
-                        name="amenities"
-                        component="div"
-                        className="text-red-500 text-sm mt-1"
-                      />
                     </div>
-                  </div>
 
-                  <div>
-                    <button
-                      className="btn-essential flex items-center justify-center"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                      ) : (
-                        "Add Listing"
-                      )}
-                    </button>
+                    {/* Second Column: Form fields (4 cols) */}
+                    <div className="lg:col-span-4 space-y-3">
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="price"
+                          className="block text-xs font-medium text-gray-700"
+                        >
+                          Price
+                        </label>
+                        <Field
+                          type="number"
+                          name="price"
+                          placeholder="Enter price ( in $ )"
+                          className="w-full border-2 p-2 text-sm outline-none"
+                        />
+                        <div className="h-4">
+                          <ErrorMessage
+                            name="price"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="country"
+                          className="block text-xs font-medium text-gray-700"
+                        >
+                          Country
+                        </label>
+                        <Field
+                          type="text"
+                          name="country"
+                          placeholder="Enter country"
+                          className="w-full border-2 p-2 text-sm outline-none"
+                        />
+                        <div className="h-4">
+                          <ErrorMessage
+                            name="country"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="location"
+                          className="block text-xs font-medium text-gray-700"
+                        >
+                          Location
+                        </label>
+                        <Field
+                          type="text"
+                          name="location"
+                          placeholder="Enter location ( City or State )"
+                          className="w-full border-2 p-2 text-sm outline-none"
+                        />
+                        <div className="h-4">
+                          <ErrorMessage
+                            name="location"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="block text-xs font-medium text-gray-700">
+                          Type
+                        </label>
+                        <div className="flex gap-4">
+                          {["Sale", "Rent"].map((option) => (
+                            <label
+                              key={option}
+                              className="flex items-center space-x-2 cursor-pointer"
+                            >
+                              <Field
+                                type="radio"
+                                name="type"
+                                value={option}
+                                className="appearance-none w-4 h-4 border-2 border-gray-300 rounded-full"
+                              />
+                              <span className="text-sm">{option}</span>
+                            </label>
+                          ))}
+                        </div>
+                        <div className="h-4">
+                          <ErrorMessage
+                            name="type"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="block text-xs font-medium text-gray-700">
+                          Amenities
+                        </label>
+                        <div className="flex gap-4">
+                          {["Parking", "Furnished"].map((option) => (
+                            <label
+                              key={option}
+                              className="flex items-center space-x-2 cursor-pointer"
+                            >
+                              <Field
+                                type="checkbox"
+                                name="amenities"
+                                value={option}
+                                className="appearance-none w-4 h-4 border-2 border-gray-300 checked:bg-primary checked:border-primary"
+                              />
+                              <span className="text-sm">{option}</span>
+                            </label>
+                          ))}
+                        </div>
+                        <div className="h-4">
+                          <ErrorMessage
+                            name="amenities"
+                            component="div"
+                            className="text-red-500 text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-4">
+                        <button
+                          className="btn-essential flex items-center justify-center w-full py-2 text-sm"
+                          type="submit"
+                          disabled={isSubmitting}
+                        >
+                          {isSubmitting ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                          ) : (
+                            "Add Listing"
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Third Column: Image Upload and Preview (4 cols) */}
+                    <div className="lg:col-span-4 space-y-1">
+                      <label
+                        htmlFor="image"
+                        className="block text-xs font-medium text-gray-700"
+                      >
+                        Image
+                      </label>
+                      <input
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        onChange={(e) => {
+                          setFieldValue("image", e.target.files[0]);
+                        }}
+                        className="w-full border-2 p-2 text-sm outline-none"
+                      />
+                      <div className="h-4">
+                        <ErrorMessage
+                          name="image"
+                          component="div"
+                          className="text-red-500 text-xs"
+                        />
+                      </div>
+                      <ImagePreview />
+                    </div>
                   </div>
                 </Form>
               )}

@@ -57,9 +57,9 @@ router.get("/search", async (req, res) => {
     // Convert order to MongoDB sort value (1 for asc, -1 for desc)
     const mongoSortOrder = sortOrder === "asc" ? 1 : -1;
 
-    console.log(
-      `Sorting by: ${actualSortField}, Order: ${sortOrder} (${mongoSortOrder})`
-    );
+    // console.log(
+    //   `Sorting by: ${actualSortField}, Order: ${sortOrder} (${mongoSortOrder})`
+    // );
 
     const listings = await Listing.find({
       title: { $regex: searchTerm, $options: "i" },

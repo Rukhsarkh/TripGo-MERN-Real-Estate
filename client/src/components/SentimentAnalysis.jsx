@@ -10,9 +10,9 @@ import {
 import config from "../config";
 
 const SentimentBar = ({ percentage, colorClass }) => (
-  <div className="w-full h-3 md:h-4 bg-gray-200 overflow-hidden rounded-md">
+  <div className="w-full h-3 md:h-4 bg-gray-200 overflow-hidden">
     <div
-      className={`h-full ${colorClass} rounded-md transition-all duration-500 ease-in-out`}
+      className={`h-full ${colorClass} transition-all duration-500 ease-in-out`}
       style={{ width: `${percentage}%` }}
     ></div>
   </div>
@@ -59,7 +59,7 @@ const SentimentAnalysis = ({ listingId }) => {
   }, [listingId]);
 
   const SentimentCard = ({ title, percentage, icon: Icon, colorClass }) => (
-    <div className="space-y-2 p-2 md:p-3 lg:p-4 bg-gray-50 rounded-lg shadow-lg shadow-gray-300 transition-shadow">
+    <div className="space-y-2 p-2 md:p-3 lg:p-4 bg-gray-50 shadow-lg shadow-gray-300 transition-shadow">
       <div className="flex items-center justify-between gap-2 md:gap-4 lg:gap-6">
         <div className="flex items-center gap-2 md:gap-3">
           <Icon
@@ -116,7 +116,7 @@ const SentimentAnalysis = ({ listingId }) => {
   }
 
   return (
-    <div className="w-full max-w-3xl p-3 md:p-4 lg:p-8 space-y-4 md:space-y-6 shadow-lg shadow-gray-300 rounded-b-xl">
+    <div className="w-full max-w-3xl p-3 md:p-4 lg:p-8 space-y-4 md:space-y-6 shadow-lg shadow-gray-300">
       <div className="space-y-2 md:space-y-4">
         <div className="justify-center items-center inline-flex gap-4">
           <TrendingUp className=" text-primary" size={32} />

@@ -17,6 +17,7 @@ import CommonHeader from "./components/CommonHeader";
 import EditListingForm from "./screens/EditListingForm";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Account from "./screens/Account";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
               <Route path="new-form" element={<NewListingForm />} />
               <Route path="show-list/:id" element={<ShowListing />} />
               <Route path="edit-list/:id" element={<EditListingForm />} />
+              <Route path="account" element={<Account />} />
             </Route>
             {/* Catch-all route */}
             <Route path="*" element={<LandingPage />} />

@@ -56,7 +56,7 @@ const CommonHeader = () => {
           {isMid && (
             <div className="relative">
               <div
-                className="relative w-20 h-10 bg-white rounded-3xl inline-flex items-center gap-3 p-1 cursor-pointer shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300"
+                className="relative w-20 h-10 bg-white inline-flex items-center gap-3 p-1 cursor-pointer shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300"
                 onClick={handleOnClick}
                 ref={userButtonRef}
               >
@@ -85,13 +85,13 @@ const CommonHeader = () => {
           {isMid && (
             <div className="flex flex-row justify-center items-center gap-5">
               <button
-                className="text-xl rounded-3xl p-1 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white"
+                className="text-xl p-2 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white"
                 onClick={() => navigate("/explore")}
               >
                 Explore
               </button>
               <div
-                className="cursor-pointer inline-flex items-center gap-2 text-primary rounded-3xl p-1 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white"
+                className="cursor-pointer inline-flex items-center gap-2 text-primary p-2 px-3 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white"
                 onClick={() => {
                   if (!isLoggedIn) {
                     localStorage.setItem("returnTo", "/new-form");
@@ -126,14 +126,14 @@ const CommonHeader = () => {
         {isLarge && (
           <div className="flex flex-row max-lg:flex-col gap-5 text-lg text-thin p-2">
             <button
-              className="text-xl rounded-3xl p-1 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white hover:bg-gray-100"
+              className="text-xl p-1 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white hover:bg-gray-100"
               onClick={() => navigate("/explore")}
             >
               Explore
             </button>
             <div className="relative">
               <div
-                className="relative w-20 h-10 bg-white rounded-3xl inline-flex items-center gap-3 p-1 cursor-pointer shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:bg-gray-100"
+                className="relative w-20 h-10 bg-white inline-flex items-center gap-3 p-1 cursor-pointer shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:bg-gray-100"
                 onClick={handleOnClick}
                 ref={userButtonRef}
               >
@@ -156,7 +156,7 @@ const CommonHeader = () => {
               )}
             </div>
             <div
-              className="cursor-pointer inline-flex items-center gap-2 rounded-3xl p-1 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white hover:bg-gray-100"
+              className="cursor-pointer inline-flex items-center gap-2 p-1 px-2 shadow-lg shadow-gray-400 active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 font-thin bg-white hover:bg-gray-100"
               onClick={() => {
                 // Check authentication before navigating
                 if (!isLoggedIn) {

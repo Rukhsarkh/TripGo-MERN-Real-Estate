@@ -168,14 +168,14 @@ const AllReviews = ({ listingId }) => {
   }
 
   return (
-    <div className="w-full max-w-7xl">
+    <div className="w-full max-w-7xl mb-20">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Reviews Section */}
         <div className="w-full lg:w-1/2">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
             {allReviews.map((item) => (
               <div
-                className="border-2 rounded-lg p-4 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow"
+                className="border-2 p-4 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow"
                 key={item._id}
               >
                 <div className="flex items-center justify-between flex-wrap gap-2">
@@ -196,14 +196,14 @@ const AllReviews = ({ listingId }) => {
                       {editingReviewId === item._id ? (
                         <>
                           <button
-                            className="px-4 py-2 text-sm md:text-base bg-green-50 text-green-600 rounded-lg 
+                            className="px-4 py-2 text-sm md:text-base bg-green-50 text-green-600
                               hover:bg-green-100 transition-all active:translate-y-0.5 duration-100 ease-in flex items-center gap-2"
                             onClick={handleSaveReview}
                           >
                             <SaveIcon size={16} /> Save
                           </button>
                           <button
-                            className="px-4 py-2 text-sm md:text-base bg-red-50 text-red-600 rounded-lg 
+                            className="px-4 py-2 text-sm md:text-base bg-red-50 text-red-600
                               hover:bg-red-100transition-all active:translate-y-0.5 duration-100 ease-in flex items-center gap-2"
                             onClick={handleCancelEdit}
                           >
@@ -213,14 +213,14 @@ const AllReviews = ({ listingId }) => {
                       ) : (
                         <>
                           <button
-                            className="px-4 py-2 text-sm md:text-base bg-blue-50 text-blue-600 rounded-lg 
+                            className="px-4 py-2 text-sm md:text-base bg-blue-50 text-blue-600
                               hover:bg-blue-100 transition-all active:translate-y-0.5 duration-100 ease-in flex items-center gap-2"
                             onClick={() => handleEditReview(item)}
                           >
                             <EditIcon size={16} /> Edit
                           </button>
                           <button
-                            className="px-4 py-2 text-sm md:text-base bg-red-50 text-red-600 rounded-lg 
+                            className="px-4 py-2 text-sm md:text-base bg-red-50 text-red-600
                               hover:bg-red-100 transition-all active:translate-y-0.5 duration-100 ease-in flex items-center gap-2"
                             onClick={() => setIsDeleteBoxOpen(true)}
                           >
@@ -238,7 +238,7 @@ const AllReviews = ({ listingId }) => {
                     onClick={() => setIsDeleteBoxOpen(false)}
                   >
                     <div
-                      className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl"
+                      className="bg-white p-6 w-full max-w-md shadow-2xl"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -253,7 +253,7 @@ const AllReviews = ({ listingId }) => {
                         <button
                           onClick={() => setIsDeleteBoxOpen(false)}
                           disabled={isDeleting}
-                          className="px-4 py-2 rounded-md border border-gray-300 
+                          className="px-4 py-2 border border-gray-300 
                 hover:bg-gray-100 transition-colors 
                 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
@@ -262,7 +262,7 @@ const AllReviews = ({ listingId }) => {
                         <button
                           onClick={() => handleReviewDelete(item._id)}
                           disabled={isDeleting}
-                          className="px-4 py-2 rounded-md bg-red-500 text-white 
+                          className="px-4 py-2 bg-red-500 text-white 
                 hover:bg-red-600 transition-colors 
                 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
@@ -297,7 +297,7 @@ const AllReviews = ({ listingId }) => {
                       ))}
                     </div>
                     <textarea
-                      className="w-full border rounded-lg p-2 text-sm md:text-base"
+                      className="w-full border p-2 text-sm md:text-base"
                       rows={3}
                       value={editedReview.comment}
                       onChange={(e) =>
@@ -334,10 +334,10 @@ const AllReviews = ({ listingId }) => {
         </div>
 
         {/* Sentiment Analysis Section */}
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/2 max-md:mt-10">
           <div className="sticky top-4">
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <h2 className="text-xl md:text-2xl font-bold mb-4 text-center p-2 bg-primary text-white rounded-t-xl">
+            <div className="bg-white shadow-lg">
+              <h2 className="text-xl md:text-2xl font-bold mb-4 text-center p-2 bg-primary text-white">
                 Sentiment Analysis
               </h2>
               <SentimentAnalysis listingId={listingId} />

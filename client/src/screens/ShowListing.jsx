@@ -128,7 +128,7 @@ const ShowListing = () => {
             <div className="flex flex-row gap-4 justify-center">
               <button
                 onClick={() => setIsDeleteBoxOpen(true)}
-                className="rounded-xl px-6 py-3 
+                className="px-6 py-3 
           bg-red-500 text-white text-base sm:text-lg 
           hover:bg-red-600 transition-all duration-300 ease-out
           flex items-center justify-center gap-2
@@ -146,7 +146,7 @@ const ShowListing = () => {
                   onClick={() => setIsDeleteBoxOpen(false)}
                 >
                   <div
-                    className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl"
+                    className="bg-white p-6 w-full max-w-md shadow-2xl"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -161,7 +161,7 @@ const ShowListing = () => {
                       <button
                         onClick={() => setIsDeleteBoxOpen(false)}
                         disabled={isDeleting}
-                        className="px-4 py-2 rounded-md border border-gray-300 
+                        className="px-4 py-2 border border-gray-300 
                 hover:bg-gray-100 transition-colors 
                 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
@@ -170,7 +170,7 @@ const ShowListing = () => {
                       <button
                         onClick={handleConfirmDelete}
                         disabled={isDeleting}
-                        className="px-4 py-2 rounded-md bg-red-500 text-white 
+                        className="px-4 py-2 bg-red-500 text-white 
                 hover:bg-red-600 transition-colors 
                 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
@@ -183,7 +183,7 @@ const ShowListing = () => {
 
               <button
                 onClick={handleEditClick}
-                className="rounded-xl px-6 py-3 
+                className="px-6 py-3 
           bg-primary text-white text-base sm:text-lg 
           hover:bg-primary/90 transition-all duration-500 ease-out
           flex items-center justify-center gap-2
@@ -204,6 +204,7 @@ const ShowListing = () => {
           </button>
         </div>
       </div>
+
       {/* Mobile More Images Button */}
       <div className="lg:hidden mt-6 flex justify-center">
         <button className="text-gray-400 text-xl inline-flex items-center gap-2 hover:scale-105 transition-transform duration-300 border-2 border-black p-3">
@@ -211,8 +212,8 @@ const ShowListing = () => {
           <ArrowRightCircle className="w-6 h-6" />
         </button>
       </div>
-      {/* <hr className="my-8 h-0.5 bg-black" /> */}
-      <div className="bg-white rounded-lg p-4 sm:p-6 mt-20">
+
+      <div className="bg-white mt-20">
         <h1 className="text-2xl md:text-3xl font-bold max-lg:text-center text-gray-800 mb-4">
           Where you'll be
         </h1>
@@ -222,16 +223,14 @@ const ShowListing = () => {
           locationImage={listing.image.url}
         />
       </div>
-      {/* <hr className="h-0.5 bg-black" /> */}
+
       {/* Reviews Section */}
-      <div className="space-y-8 mt-20">
-        <div className="bg-white rounded-lg p-4 sm:p-6">
+      <div className="mt-20">
+        <div className="bg-white ">
           <LeaveReview listingId={listing._id} />
         </div>
 
-        {/* <hr className="h-0.5 bg-black" /> */}
-
-        <div className="bg-white rounded-lg p-4 sm:p-6 mt-20">
+        <div className="bg-white my-24">
           <h1 className="text-2xl md:text-3xl font-bold max-lg:text-center text-gray-800 mb-4">
             All Reviews ({listing.reviews.length})
           </h1>
