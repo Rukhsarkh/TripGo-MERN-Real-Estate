@@ -1,9 +1,12 @@
 import {
+  DollarSign,
   Edit3,
+  Eye,
   Home,
   Lock,
   LogOut,
   Mail,
+  MapPin,
   Plus,
   Trash2,
   User,
@@ -19,6 +22,7 @@ const DesktopAccount = ({
   handleEditProfile,
   setIsOpenDeleteDialogue,
   handleLogout,
+  navigate,
 }) => {
   return (
     <div className="hidden lg:block h-full">
@@ -204,15 +208,25 @@ const DesktopAccount = ({
                                   className="text-emerald-400"
                                 />
                                 <span className="font-bold text-emerald-400">
-                                  {listing.price}
+                                  {listing.price.toLocaleString("en-IN")}
                                 </span>
                               </div>
                               <div className="flex gap-2">
-                                <button className="flex items-center gap-1 bg-red-50 text-primary px-3 py-1 hover:bg-blue-200 transition-colors text-sm">
+                                <button
+                                  className="flex items-center gap-1 bg-red-50 text-primary px-3 py-1 hover:bg-blue-200 transition-colors text-sm"
+                                  onClick={() =>
+                                    navigate(`/show-list/${listing._id}`)
+                                  }
+                                >
                                   <Eye size={14} />
                                   View
                                 </button>
-                                <button className="flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-1 hover:bg-gray-200 transition-colors text-sm">
+                                <button
+                                  className="flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-1 hover:bg-gray-200 transition-colors text-sm"
+                                  onClick={() =>
+                                    navigate(`/edit-list/${listing._id}`)
+                                  }
+                                >
                                   <Edit3 size={14} />
                                   Edit
                                 </button>

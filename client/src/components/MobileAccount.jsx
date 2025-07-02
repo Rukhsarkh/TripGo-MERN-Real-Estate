@@ -19,11 +19,12 @@ const MobileAccount = ({
   handleEditProfile,
   setIsOpenDeleteDialogue,
   handleLogout,
+  navigate,
 }) => {
   return (
     <div className=" flex flex-col lg:hidden gap-16 pt-8">
       {/* Mobile Header */}
-      <div className="bg-white shadow-xl mb-4 overflow-hidden">
+      <div className="bg-white shadow-xl mb-4 overflow-hidden rounded-xl">
         <div className="h-24 bg-primary"></div>
         <div className="p-4">
           <div className="flex items-center mb-4">
@@ -149,7 +150,10 @@ const MobileAccount = ({
                       className="bg-gray-50 overflow-hidden"
                     >
                       <div className="flex">
-                        <div className="w-36 flex-shrink-0 p-1">
+                        <div
+                          className="w-36 flex-shrink-0 p-1"
+                          onClick={() => navigate(`/show-list/${listing._id}`)}
+                        >
                           <img
                             src={listing.image.url}
                             alt={listing.title}
@@ -164,7 +168,7 @@ const MobileAccount = ({
                             {listing.location}
                           </p>
                           <p className="font-bold text-primary text-sm">
-                            ${listing.price}
+                            ${listing.price.toLocaleString("en-IN")}
                           </p>
                         </div>
                       </div>

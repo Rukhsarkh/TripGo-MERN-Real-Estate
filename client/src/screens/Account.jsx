@@ -273,7 +273,7 @@ const Account = () => {
           }
         );
 
-        // console.log(response.data);
+        console.log(response.data);
         const { success, message, listings } = response.data;
 
         if (success) {
@@ -306,6 +306,7 @@ const Account = () => {
               handleEditProfile={handleEditProfile}
               setIsOpenDeleteDialogue={setIsOpenDeleteDialogue}
               handleLogout={handleLogout}
+              navigate={navigate}
             />
 
             <DesktopAccount
@@ -318,6 +319,7 @@ const Account = () => {
               handleEditProfile={handleEditProfile}
               setIsOpenDeleteDialogue={setIsOpenDeleteDialogue}
               handleLogout={handleLogout}
+              navigate={navigate}
             />
           </div>
         </div>
