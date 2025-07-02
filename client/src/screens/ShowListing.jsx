@@ -2,7 +2,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import MainScreen from "../components/MainScreen";
 import { useEffect, useState } from "react";
-import { ArrowRightCircle, EditIcon, Trash2Icon } from "lucide-react";
+import { EditIcon, Trash2Icon } from "lucide-react";
 import LeaveReview from "../components/LeaveReview";
 import AllReviews from "../components/AllReviews";
 import { useAuth } from "../hooks/useAuth";
@@ -196,21 +196,6 @@ const ShowListing = () => {
             </div>
           )}
         </div>
-
-        <div className="hidden lg:flex items-center justify-center">
-          <button className="text-gray-400 text-xl sm:text-2xl inline-flex items-center gap-3 hover:scale-105 transition-transform duration-300 border-2 border-black p-4">
-            <span>More images</span>
-            <ArrowRightCircle className="w-8 h-8 sm:w-12 sm:h-12" />
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile More Images Button */}
-      <div className="lg:hidden mt-6 flex justify-center">
-        <button className="text-gray-400 text-xl inline-flex items-center gap-2 hover:scale-105 transition-transform duration-300 border-2 border-black p-3">
-          <span>More images</span>
-          <ArrowRightCircle className="w-6 h-6" />
-        </button>
       </div>
 
       <div className="bg-white mt-20">

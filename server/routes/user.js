@@ -2,14 +2,213 @@ import express from "express";
 const router = express.Router();
 import sendOTPEmail from "../helpers/sendOTPEmail.js";
 import User from "../models/user.js";
+import Listing from "../models/listing.js";
 import bcrypt from "bcrypt";
 import rateLimit from "express-rate-limit";
 import passport from "passport";
 import { isLoggedIn } from "../middleware/auth.js";
+import mongoose from "mongoose";
+import multer from "multer";
+import storage from "../CloudConfig.js";
+const upload = multer({ storage });
 
 //test - route
 router.get("/get-hello", (req, res) => {
   return res.json({ message: "hello" });
+});
+
+router.put(
+  "/update-profile/:userId",
+  isLoggedIn,
+  upload.single("avatar"),
+  async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { username, email, newPassword } = req.body;
+      const userObjId = new mongoose.Types.ObjectId(userId);
+
+      // console.log(userObjId);
+      // console.log(req.user._id);
+
+      // Verify that the authenticated user is updating their own profile
+      if (!userObjId.equals(req.user._id)) {
+        return res.status(403).json({
+          success: false,
+          message: "You can only update your own profile",
+        });
+      }
+
+      // Find the user
+      const user = await User.findById(userObjId);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      //Backend field Validation
+      // Validate required fields
+      if (!username || !email) {
+        return res.status(400).json({
+          success: false,
+          message: "Username and email are required",
+        });
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide a valid email address",
+        });
+      }
+
+      // Check if email is already taken by another user
+      if (email !== user.email) {
+        const existingUser = await User.findOne({
+          email: email.toLowerCase(),
+          _id: { $ne: userObjId },
+        });
+
+        if (existingUser) {
+          return res.status(400).json({
+            success: false,
+            message: "Email is already registered to another account",
+          });
+        }
+      }
+
+      // Check if username is already taken by another user
+      if (username !== user.username) {
+        const existingUsername = await User.findOne({
+          username: username,
+          _id: { $ne: userObjId },
+        });
+
+        if (existingUsername) {
+          return res.status(400).json({
+            success: false,
+            message: "Username is already taken",
+          });
+        }
+      }
+
+      // Handle password update if provided
+      let updatedData = {
+        username: username.trim(),
+        email: email.toLowerCase().trim(),
+        updatedAt: new Date(),
+      };
+
+      if (newPassword) {
+        // Validate new password length
+        if (newPassword.length < 6) {
+          return res.status(400).json({
+            success: false,
+            message: "New password must be at least 6 characters long",
+          });
+        }
+
+        // Hash new password
+        const saltRounds = 12;
+        const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+        updatedData.password = hashedNewPassword;
+      }
+
+      if (req.file) {
+        updatedData.avatar = req.file.path;
+      }
+
+      // Update user
+      const updatedUser = await User.findByIdAndUpdate(userObjId, updatedData, {
+        new: true,
+        runValidators: true,
+      }).select("-password"); // Exclude password from response
+
+      if (!updatedUser) {
+        return res.status(404).json({
+          success: false,
+          message: "Failed to update user profile",
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: "Profile updated successfully",
+        avatar: updatedUser.avatar,
+        user: {
+          userId: updatedUser._id,
+          username: updatedUser.username,
+          email: updatedUser.email,
+          updatedAt: updatedUser.updatedAt,
+        },
+      });
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+
+      // Handle validation errors
+      if (error.name === "ValidationError") {
+        const validationErrors = Object.values(error.errors).map(
+          (err) => err.message
+        );
+        return res.status(400).json({
+          success: false,
+          message: "Validation error",
+          errors: validationErrors,
+        });
+      }
+
+      // Handle duplicate key errors
+      if (error.code === 11000) {
+        const field = Object.keys(error.keyPattern)[0];
+        return res.status(400).json({
+          success: false,
+          message: `${
+            field.charAt(0).toUpperCase() + field.slice(1)
+          } is already taken`,
+        });
+      }
+
+      res.status(500).json({
+        success: false,
+        message: "Internal server error while updating profile",
+      });
+    }
+  }
+);
+
+router.delete("/deleteUser/:userId", isLoggedIn, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    // console.log(userId);
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.json({ success: false, message: "invaliduser ID" });
+    }
+
+    const listings = await Listing.find({
+      author: new mongoose.Types.ObjectId(userId),
+    });
+
+    // console.log(listings);
+    await Listing.deleteMany({ author: new mongoose.Types.ObjectId(userId) });
+
+    const userToBeDeleted = await User.findByIdAndDelete(
+      new mongoose.Types.ObjectId(userId)
+    );
+
+    // console.log(userToBeDeleted);
+    return res
+      .status(200)
+      .json({ success: true, message: "User Successfully Deleted" });
+  } catch (error) {
+    console.error("Error Deleting User", error);
+    return res
+      .status(500)
+      .json({ sucess: false, message: "Error Deleting User" });
+  }
 });
 
 router.get("/auth", (req, res) => {
@@ -34,6 +233,7 @@ router.get("/auth", (req, res) => {
 });
 
 router.post("/login", (req, res, next) => {
+  // console.log("Login Route: ", req.body);
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       return next(err);
@@ -101,22 +301,23 @@ router.get("/get-profile", isLoggedIn, async (req, res) => {
       });
     }
 
-    const user = await User.findById(userId).select("username email");
+    const user = await User.findById(userId).select("username email avatar");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // console.log("*******************************");
-    // console.log("Found user:", user);
-    // console.log("****************************************");
-
     res.json({
       username: user.username,
       email: user.email,
+      userId: user._id,
+      isAuthenticated: true,
+      avatar: user.avatar,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching profile, server Error !" });
+    return res
+      .status(500)
+      .json({ message: "Error fetching profile, server Error !" });
   }
 });
 

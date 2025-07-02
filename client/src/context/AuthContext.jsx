@@ -7,6 +7,7 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
 
   const checkAuthStatus = async () => {
     try {
@@ -15,10 +16,12 @@ export const AuthProvider = ({ children }) => {
         withCredentials: true,
       });
       setIsLoggedIn(response.data.isAuthenticated);
+      setUserId(response.data.id);
       return response.data.id;
     } catch (error) {
       console.error("Error checking auth status", error);
       setIsLoggedIn(false);
+      setUserId(null);
     } finally {
       setIsLoading(false);
     }
@@ -47,6 +50,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     isLoggedIn,
     isLoading,
+    userId,
     setIsLoggedIn,
     logout,
     checkAuthStatus,

@@ -101,10 +101,14 @@ const SignUpScreen = () => {
     }
   };
 
+  const handleGoogleSignUp = () => {
+    window.location.href = `${config.API_URL}/auth/google`;
+  };
+
   return (
     <div className="lg:h-screen lg:w-screen lg:overflow-hidden flex items-center justify-center bg-[radial-gradient(circle_at_50%_120%,rgba(239,68,68,0.1),rgba(156,163,175,0.1))] py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-between">
-        <div className="w-full lg:w-1/2 max-w-md">
+        <div className="w-full lg:w-1/2 max-w-md -mt-14">
           <MainScreen title="Sign Up">
             <div className="bg-white shadow-2xl px-8 py-4 mt-2 shadow-gray-500">
               <Formik
@@ -190,33 +194,40 @@ const SignUpScreen = () => {
                       />
                     </div>
 
-                    <div className="flex flex-col gap-4">
-                      <button
-                        type="submit"
-                        className="btn-essential flex items-center justify-center"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          <div className="animate-spin h-5 w-5 border-t-2 border-b-2 border-white rounded-full"></div>
-                        ) : (
-                          "Sign Up"
-                        )}
-                      </button>
-
-                      <p className="text-center text-sm text-gray-600">
-                        Already have an account?{" "}
-                        <button
-                          type="button"
-                          onClick={() => navigate("/login")}
-                          className="text-primary hover:text-primary/80 font-medium focus:outline-none transition-colors duration-200"
-                        >
-                          Log in
-                        </button>
-                      </p>
-                    </div>
+                    <button
+                      type="submit"
+                      className="btn-essential flex items-center justify-center"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <div className="animate-spin h-5 w-5 border-t-2 border-b-2 border-white rounded-full"></div>
+                      ) : (
+                        "Sign Up"
+                      )}
+                    </button>
                   </Form>
                 )}
               </Formik>
+              <div className="flex flex-col gap-4">
+                <button
+                  type="button"
+                  className="btn-essential-google flex items-center justify-center mt-1 flex-inline gap-2"
+                  onClick={handleGoogleSignUp}
+                >
+                  <p>Sign Up With Google</p>
+                  <img src="../google-logo.png" className="w-6 h-6" />
+                </button>
+                <p className="text-center text-sm text-gray-600">
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={() => navigate("/login")}
+                    className="text-primary hover:text-primary/80 font-medium focus:outline-none transition-colors duration-200"
+                  >
+                    Log in
+                  </button>
+                </p>
+              </div>
             </div>
           </MainScreen>
         </div>

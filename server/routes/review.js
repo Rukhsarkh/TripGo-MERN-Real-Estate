@@ -12,7 +12,7 @@ router.post("/:listingId/create", isLoggedIn, async (req, res) => {
       ...req.body,
       author: req.user._id,
     });
-    console.log(req.body);
+    // console.log(req.body);
     const savedReview = await newReview.save();
     listing.reviews.push(savedReview);
     await listing.save();

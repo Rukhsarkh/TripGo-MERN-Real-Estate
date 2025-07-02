@@ -27,9 +27,13 @@ const validationSchema = Yup.object().shape({
     .test("fileType", "Unsupported file type", (value) => {
       return (
         value &&
-        ["image/jpeg", "image/png", "image/gif", "image/webp"].includes(
-          value.type
-        )
+        [
+          "image/jpeg",
+          "image/png",
+          "image/gif",
+          "image/webp",
+          "image/avif",
+        ].includes(value.type)
       );
     }),
   price: Yup.number()
@@ -75,7 +79,10 @@ const NewListingForm = () => {
     return preview ? (
       <div className="mt-2">
         <img
-          src={URL.createObjectURL(values.image)}
+          // src={URL.createObjectURL(values.image)} - no need to make URL obj again
+          //because render creates a new blob URL, and the old ones are never used.
+          //since we are storing updates image in preview it's better to use
+          src={preview}
           alt="image-preview"
           className="w-full h-64 object-cover"
         />
@@ -125,7 +132,10 @@ const NewListingForm = () => {
       });
 
       resetForm();
-      navigate("/explore");
+      setTimeout(() => {
+        navigate("/account");
+        window.location.reload();
+      }, 4000);
     } catch (error) {
       toast.error(
         error.response?.data?.message ||

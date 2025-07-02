@@ -11,7 +11,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "TRIPGO_DEV",
-    allowedFormats: ["png", "jpeg", "jpg"],
+    allowedFormats: ["png", "jpeg", "jpg", "avif", "gif", "webp"],
   },
 });
 

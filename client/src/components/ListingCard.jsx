@@ -42,7 +42,7 @@ const ListingCard = ({ listing }) => {
 
         <div className="flex items-center text-gray-500 text-sm gap-1">
           <MapPin size={18} className="text-green-500" />
-          <span className="line-clamp-1">
+          <span className="line-clamp-1" title="map">
             {listing.location}, {listing.country}
           </span>
         </div>
