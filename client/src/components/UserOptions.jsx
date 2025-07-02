@@ -15,18 +15,6 @@ const UserOptions = ({ isLoggedIn, logout }) => {
       {isLoggedIn ? (
         <div>
           <div className="flex flex-col gap-2">
-            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-              Messages
-            </button>
-            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-              Trips
-            </button>
-            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-              WishList
-            </button>
-          </div>
-          <hr />
-          <div className="flex flex-col gap-2">
             <button
               className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors"
               onClick={() => {
@@ -42,7 +30,6 @@ const UserOptions = ({ isLoggedIn, logout }) => {
               LogOut
             </button>
           </div>
-          <hr />
         </div>
       ) : (
         <div>
@@ -60,19 +47,6 @@ const UserOptions = ({ isLoggedIn, logout }) => {
               Login
             </button>
           </div>
-          <hr />
-          <div className="flex flex-col gap-2">
-            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-              TripGo Your Home
-            </button>
-            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-              Host Your Experience
-            </button>
-            <button className="hover:bg-gray-100 py-2 px-4 rounded-md text-left transition-colors">
-              Help Center
-            </button>
-          </div>
-          <hr />
         </div>
       )}
     </div>

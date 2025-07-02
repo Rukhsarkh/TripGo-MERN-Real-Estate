@@ -15,7 +15,7 @@ connectDB();
 
 const app = express();
 
-// Add this before your middleware setup
+// Add before middleware setup
 app.set("trust proxy", 1);
 
 app.use(express.json());
@@ -42,6 +42,7 @@ app.use(
   })
 );
 
+//Passport's Local Strategy (username, password)
 import { compareSync } from "bcrypt";
 import { Strategy as LocalStrategy } from "passport-local";
 import User from "./models/user.js";
@@ -74,11 +75,80 @@ passport.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Passport's Google OAuth2.0 Strategy
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const existingUser = await User.findOne({ googleId: profile.id });
+
+        if (existingUser) return done(null, existingUser);
+
+        // check by email (in case user already exists via local signup)
+        const userByEmail = await User.findOne({
+          email: profile.emails[0].value,
+        });
+
+        if (userByEmail) {
+          // optionally: link their googleId
+          userByEmail.googleId = profile.id;
+          await userByEmail.save();
+          return done(null, userByEmail);
+        }
+
+        //new Google User
+        const newUser = new User({
+          googleId: profile.id,
+          username: profile.displayName,
+          email: profile.emails?.[0].value,
+          avatar: profile.photos?.[0].value,
+        });
+
+        await newUser.save();
+        return done(null, newUser);
+      } catch (err) {
+        return done(err);
+      }
+    }
+  )
+);
+
+// Redirect user to Google for login
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Google will redirect back to this route
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+    session: true,
+  }),
+  (req, res) => {
+    try {
+      // console.log(typeof req.user.avatar);
+      // console.log("req.user.avatar: ", req.user.avatar);
+      res.redirect(`${process.env.FRONTEND_URL}/account`);
+    } catch (error) {
+      // console.log("Redirect Err: ", err);
+      res.status(500).send("Something went wrong after login");
+    }
+  }
+);
+
 // Detailed CORS configuration
 const corsOptions = {
   origin: [
-    "https://supertripdotcom.onrender.com", // Your frontend URL
-    "http://localhost:3000", // Local development URL
+    "https://supertripdotcom.onrender.com", // frontend URL
+    "http://localhost:3000", // Local Backend URL
     "http://localhost:5173", // Vite default dev server
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],

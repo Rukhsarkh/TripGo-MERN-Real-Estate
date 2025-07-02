@@ -1,6 +1,12 @@
 const SearchForm = ({ handleSubmit, handleOnChange, sidebarValues }) => {
   return (
-    <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+    <form
+      className="flex flex-col gap-8"
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(e);
+      }}
+    >
       <div className="flex gap-2 flex-wrap items-center">
         <div className="flex items-center gap-2">
           <label className="whitespace-nowrap font-semibold">Search</label>

@@ -51,12 +51,9 @@ const Header = () => {
       <div className="flex flex-row max-lg:flex-col max-lg:gap-14 justify-between items-center p-3">
         <div className="max-lg:flex max-lg:flex-row max-lg:justify-between max-lg:w-full">
           <div className="inline-flex items-center gap-1 cursor-pointer">
-            <CompassIcon
-              className="text-white cursor-pointer max-lg:size-6"
-              size={32}
-            />
+            <CompassIcon className="cursor-pointer max-lg:size-6" size={32} />
             <button
-              className="cursor-pointer font-thin max-sm:text-xl text-2xl text-white 2xl:hover:text-4xl transition-all duration-300 ease-in"
+              className="cursor-pointer lg:font-thin max-sm:text-xl text-2xl xl:hover:text-4xl transition-all duration-300 ease-in"
               onClick={() => navigate("/")}
             >
               TripGO
@@ -68,11 +65,11 @@ const Header = () => {
             <div className="relative">
               <div
                 ref={userButtonRef}
-                className="relative w-20 h-10 bg-inherit inline-flex items-center gap-3 p-2 cursor-pointer shadow-gray-400 shadow-inner active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:shadow-lg hover:shadow-gray-400"
+                className="relative w-20 h-10 bg-white inline-flex items-center gap-3 p-2 cursor-pointer active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:shadow-lg hover:shadow-gray-400"
                 onClick={handleOnClick}
               >
-                <MenuIcon size={32} className="text-gray-300" />
-                <User className="text-white" size={32} />
+                <MenuIcon size={32} />
+                <User size={32} />
               </div>
 
               {toggle && (
@@ -93,14 +90,14 @@ const Header = () => {
           <input
             type="text"
             placeholder="Search Destinations"
-            className={`max-lg:border-b-2 p-2 text-lg bg-inherit w-44 border-gray-300 transition-all duration-200 ease-in focus:outline-none ${
+            className={`p-2 text-lg border-b-2 font-thin bg-white w-44 border-gray-300 transition-all duration-200 ease-in focus:outline-none ${
               expandable ? "w-52" : "w-44"
             }`}
             onFocus={() => setExpandable(true)}
             onBlur={() => setExpandable(false)}
           />
           <div
-            className="bg-inherit text-white gap-2 inline-flex items-center hover:cursor-pointer"
+            className="bg-inherit gap-2 inline-flex items-center hover:cursor-pointer"
             onClick={() => navigate("/explore")}
           >
             <Search className="cursor-pointer size-5 lg:size-6" />
@@ -115,11 +112,11 @@ const Header = () => {
               <div className="relative">
                 <div
                   ref={userButtonRef}
-                  className="relative w-20 h-10 bg-inherit inline-flex items-center gap-3 p-2 cursor-pointer shadow-gray-400 shadow-inner active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:shadow-lg hover:shadow-gray-400"
+                  className="relative w-20 h-10 bg-white inline-flex items-center gap-3 p-2 cursor-pointer shadow-gray-400 shadow-xl active:bg-gray-200 active:translate-y-0.5 active:shadow-inner transition-all duration-300 hover:shadow-lg hover:shadow-gray-400"
                   onClick={handleOnClick}
                 >
-                  <MenuIcon size={32} className="text-gray-300" />
-                  <User className="text-white" size={32} />
+                  <MenuIcon size={32} />
+                  <User size={32} />
                 </div>
 
                 {toggle && (
@@ -146,10 +143,10 @@ const Header = () => {
                   }
                 }}
               >
-                <p className="lg:text-gray-400 hover:text-3xl transition-all duration-300 ease-in">
+                <p className="hover:text-3xl transition-all duration-300 ease-in">
                   TripGo YOUR HOME
                 </p>
-                <Globe className="text-gray-400" size={32} />
+                <Globe size={32} />
               </div>
             </div>
           </div>

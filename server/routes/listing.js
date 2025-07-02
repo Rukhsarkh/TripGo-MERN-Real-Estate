@@ -7,6 +7,7 @@ import multer from "multer";
 const upload = multer({ storage });
 import { isLoggedIn, isOwner } from "../middleware/auth.js";
 import mbxGeoCoding from "@mapbox/mapbox-sdk/services/geocoding.js";
+import mongoose from "mongoose";
 const geoCodingClient = mbxGeoCoding({ accessToken: process.env.MAP_TOKEN });
 
 if (process.env.NODE_ENV != "production") {
@@ -79,6 +80,7 @@ router.get("/search", async (req, res) => {
 });
 
 router.post("/create", isLoggedIn, upload.single("image"), async (req, res) => {
+  // console.log(req.body);
   try {
     let response = await geoCodingClient
       .forwardGeocode({
@@ -106,7 +108,7 @@ router.post("/create", isLoggedIn, upload.single("image"), async (req, res) => {
     });
 
     const savedListing = await newListing.save();
-    console.log(savedListing);
+    // console.log(savedListing);
 
     // Populate the author details after saving
     const populatedListing = await Listing.findById(savedListing._id).populate(
@@ -128,6 +130,43 @@ router.delete("/deleteList/:id", isLoggedIn, isOwner, async (req, res) => {
     res.status(200).json({ message: "Listing deleted successfully" });
   } catch (error) {
     console.error("Error deleting listing:", error);
+  }
+});
+
+router.get("/getUserListings/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    // console.log(typeof userId);
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.json({
+        success: false,
+        message: "invaliduser ID",
+        listings: [],
+      });
+    }
+
+    const listings = await Listing.find({
+      author: new mongoose.Types.ObjectId(userId),
+    });
+
+    // console.log(listings);
+
+    // if (!listings || listings.length === 0) {
+    //   return res.json({ success: false, message: "No Listing Created" });
+    // } // do not send obj even if listings is empty
+
+    //return obj and then check array.isArray
+    return res.json({
+      success: true,
+      message: listings.length == 0 ? "Listings not Found" : "Listings fetched",
+      listings,
+    });
+  } catch (error) {
+    console.error("Error Fetching User Listings: ", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Error Fetching Listings" });
   }
 });
 
