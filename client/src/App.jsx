@@ -18,6 +18,7 @@ import EditListingForm from "./screens/EditListingForm";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Account from "./screens/Account";
+import MapScreen from "./screens/MapScreen";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
               <Route path="new-form" element={<NewListingForm />} />
               <Route path="show-list/:id" element={<ShowListing />} />
               <Route path="edit-list/:id" element={<EditListingForm />} />
+              <Route path="show-map/:id" element={<MapScreen />} />
               <Route path="account" element={<Account />} />
             </Route>
             {/* Catch-all route */}

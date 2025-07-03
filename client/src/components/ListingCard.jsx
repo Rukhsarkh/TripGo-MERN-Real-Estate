@@ -40,10 +40,19 @@ const ListingCard = ({ listing }) => {
 
         <p className="text-gray-600 text-sm">{listing.description}</p>
 
-        <div className="flex items-center text-gray-500 text-sm gap-1">
+        <div
+          className="flex items-center text-gray-500 text-sm gap-1"
+          onClick={(e) => e.stopPropagation()}
+        >
           <MapPin size={18} className="text-green-500" />
           <span className="line-clamp-1" title="map">
             {listing.location}, {listing.country}
+          </span>
+          <span
+            className="hover:underline ml-4"
+            onClick={() => navigate(`/show-map/${listing._id}`)}
+          >
+            Show Map
           </span>
         </div>
 

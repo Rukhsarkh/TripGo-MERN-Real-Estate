@@ -4,11 +4,12 @@ import MainScreen from "../components/MainScreen";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import config from "../config";
-// import CategoryIconHeader from "../components/CategoryIconHeader";
+import CategoryIconHeader from "../components/CategoryIconHeader";
 import ShowError from "../ErrorPages/ShowError";
 import ListingCard from "../components/ListingCard";
 import SearchForm from "../components/SearchForm";
 import { ListPlus } from "lucide-react";
+import ListingCardSkeleton from "../components/ListingCardSkeleton";
 
 const Listings = () => {
   const navigate = useNavigate();
@@ -167,10 +168,10 @@ const Listings = () => {
           title={isLoggedIn ? `` : `Welcome To TripGo ! Login Please`}
         >
           <>
-            {/* <CategoryIconHeader /> */}
+            <CategoryIconHeader />
             <div className="flex flex-col md:flex-row">
               <div className="w-full lg:w-1/4 border-b-2 md:border-r-2 md:min-h-screen">
-                <div className="block md:hidden sticky top-0 bg-white shadow-md py-2">
+                <div className="block md:hidden sticky top-0 bg-white shadow-md py-3 mt-3">
                   <div className="flex justify-between items-center px-4">
                     <p className="text-lg font-semibold">Filters</p>
                     <button
@@ -189,7 +190,7 @@ const Listings = () => {
                 )}
 
                 <div
-                  className={`fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white z-50 transform ${
+                  className={`fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white z-50 md:z-0 transform ${
                     isOpenFilterHamburger
                       ? "translate-x-0"
                       : "-translate-x-full"
@@ -214,11 +215,12 @@ const Listings = () => {
 
               <div className="w-full">
                 {isLoading ? (
-                  <div className="lg:fixed lg:inset-0 flex items-center justify-center h-[60vh] lg:h-screen">
-                    <div className="text-2xl md:text-4xl text-gray-400 font-thin animate-pulse">
-                      Loading...
-                    </div>
-                  </div>
+                  // <div className="lg:fixed lg:inset-0 flex items-center justify-center h-[60vh] lg:h-screen">
+                  //   <div className="text-2xl md:text-4xl text-gray-400 font-thin animate-pulse">
+                  //     Loading...
+                  //   </div>
+                  // </div>
+                  <ListingCardSkeleton />
                 ) : !isLoading && listings.length === 0 ? (
                   <ShowError />
                 ) : (

@@ -13,9 +13,11 @@ import { useAuth } from "../hooks/useAuth";
 import config from "../config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReviewSkeleton from "./ReviewSkeleton";
 
 const AllReviews = ({ listingId }) => {
   const [allReviews, setAllReviews] = useState([]);
+  const [isAnalyzeReviews, setIsAnalyzeReviews] = useState(false);
   const [loading, setLoading] = useState(true);
   const { checkAuthStatus } = useAuth();
   const [userId, setUserId] = useState(null);
@@ -26,6 +28,7 @@ const AllReviews = ({ listingId }) => {
   });
   const [isDeleteBoxOpen, setIsDeleteBoxOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
   useEffect(() => {
     const fetchUserId = async () => {
       const id = await checkAuthStatus();
@@ -150,16 +153,10 @@ const AllReviews = ({ listingId }) => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center p-4">
-        <div className="animate-pulse text-lg md:text-xl text-gray-600">
-          Loading...
-        </div>
-      </div>
-    );
+    return <ReviewSkeleton />;
   }
 
-  if (allReviews.length === 0) {
+  if (!loading && allReviews.length === 0) {
     return (
       <p className="text-xl md:text-2xl text-gray-400 font-thin mt-5 text-center px-4">
         No Reviews Available. Be the First to Leave a Review
@@ -335,14 +332,31 @@ const AllReviews = ({ listingId }) => {
 
         {/* Sentiment Analysis Section */}
         <div className="w-full lg:w-1/2 max-md:mt-10">
-          <div className="sticky top-4">
-            <div className="bg-white shadow-lg">
-              <h2 className="text-xl md:text-2xl font-bold mb-4 text-center p-2 bg-primary text-white">
-                Sentiment Analysis
-              </h2>
-              <SentimentAnalysis listingId={listingId} />
+          {!isAnalyzeReviews ? (
+            <button
+              className="btn-essential lg:bg-primary font-bold lg:h-80 lg:w-80 p-5 lg:rounded-full lg:text-2xl transition-all active:translate-y-2.5 duration-300 ease-in lg:ml-36 lg:-mt-2 shadow-lg shadow-gray-400 lg:hover:translate-x-10"
+              onClick={() => setIsAnalyzeReviews(true)}
+            >
+              Analyze Reviews ?
+            </button>
+          ) : (
+            <div className="sticky top-4">
+              <div className="bg-white shadow-lg">
+                <div className="flex justify-between items-center p-2 bg-primary text-white">
+                  <h2 className="text-xl md:text-2xl font-bold text-center">
+                    Sentiment Analysis
+                  </h2>
+                  <button
+                    className="text-sm bg-white text-primary px-2 py-1 hover:bg-gray-100"
+                    onClick={() => setIsAnalyzeReviews(false)}
+                  >
+                    Stop Analysis
+                  </button>
+                </div>
+                <SentimentAnalysis listingId={listingId} />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

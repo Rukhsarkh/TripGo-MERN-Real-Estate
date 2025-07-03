@@ -17,9 +17,10 @@ const ShowMap = ({ locationCoordinates, locationName, locationImage }) => {
       zoom: 10,
     });
 
+    const imageHTML = `<img src=${locationImage} class="h-12 w-12 rounded-full"/>`;
     const popupHTML = `
       <div class="p-2 max-w-xs lg:max-w-sm text-base bg-green-200">
-        <h2 class="font-bold text-gray-800 mb-2">${locationName}</h2>
+        <h2 class="font-bold text-gray-800 mb-2 flex flex-inline gap-2">${imageHTML} ${locationName}</h2>
           <a class="text-blue-600 hover:underline cursor-pointer">Learn More</a>
       </div>
     `;
