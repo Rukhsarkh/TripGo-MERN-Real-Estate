@@ -6,12 +6,13 @@ import { EditIcon, Trash2Icon } from "lucide-react";
 import LeaveReview from "../components/LeaveReview";
 import AllReviews from "../components/AllReviews";
 import { useAuth } from "../hooks/useAuth";
-import ShowMap from "../components/ShowMap";
 import config from "../config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CheckCircle2Icon } from "lucide-react";
 import ShowListingNotFound from "../ErrorPages/ShowListingNotFound";
+import LazyLoadWrapper from "../components/wrappers/lazyLoadWrapper";
+import ListingDetails from "../components/ListingDetails";
 
 const ShowListing = () => {
   const { id } = useParams();
@@ -37,6 +38,7 @@ const ShowListing = () => {
           `${config.API_URL}/api/listings/posts/${id}`,
           { withCredentials: true }
         );
+        // console.log(response);
         setListing(response.data);
       } catch (error) {
         console.error(error);
@@ -114,99 +116,89 @@ const ShowListing = () => {
           Listed by: {listing.author?.username || "unknown"}
         </p>
       </div>
-      <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
-        <div className="flex-1 space-y-4">
-          <div className="relative w-full overflow-hidden aspect-[4/3] bg-gray-100">
-            <img
-              src={listing.image?.url}
-              alt={listing.title}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-          </div>
 
-          {listing.author?._id === userId && (
-            <div className="flex flex-row gap-4 justify-center">
-              <button
-                onClick={() => setIsDeleteBoxOpen(true)}
-                className="px-6 py-3 
+      <div className="flex-1 lg:mt-4">
+        <div className="relative w-full overflow-hidden aspect-[4/3] lg:aspect-[8/3] bg-gray-100">
+          <img
+            src={listing.image?.url}
+            alt={listing.title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
+
+        <ListingDetails listing={listing} />
+
+        {listing.author?._id === userId && (
+          <div className="flex flex-row gap-4 justify-center pt-4">
+            <button
+              onClick={() => setIsDeleteBoxOpen(true)}
+              className="px-6 py-3 
           bg-red-500 text-white text-base sm:text-lg 
           hover:bg-red-600 transition-all duration-300 ease-out
           flex items-center justify-center gap-2
           shadow-md hover:shadow-lg activate:translate-y-0.5"
-              >
-                <span className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-10 transition-opacity"></span>
-                <Trash2Icon className="mr-2" size={20} />
-                Delete
-              </button>
+            >
+              <span className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-10 transition-opacity"></span>
+              <Trash2Icon className="mr-2" size={20} />
+              Delete
+            </button>
 
-              {isDeleteBoxOpen && (
-                <div
-                  className="fixed inset-0 z-50 flex items-center justify-center 
+            {isDeleteBoxOpen && (
+              <div
+                className="fixed inset-0 z-50 flex items-center justify-center 
           bg-black bg-opacity-50 backdrop-blur-sm"
-                  onClick={() => setIsDeleteBoxOpen(false)}
+                onClick={() => setIsDeleteBoxOpen(false)}
+              >
+                <div
+                  className="bg-white p-6 w-full max-w-md shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <div
-                    className="bg-white p-6 w-full max-w-md shadow-2xl"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                      Confirm Deletion
-                    </h2>
-                    <p className="text-gray-600 mb-6">
-                      Are you sure you want to delete this list? This action
-                      cannot be undone.
-                    </p>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                    Confirm Deletion
+                  </h2>
+                  <p className="text-gray-600 mb-6">
+                    Are you sure you want to delete this list? This action
+                    cannot be undone.
+                  </p>
 
-                    <div className="flex justify-end space-x-4">
-                      <button
-                        onClick={() => setIsDeleteBoxOpen(false)}
-                        disabled={isDeleting}
-                        className="px-4 py-2 border border-gray-300 
+                  <div className="flex justify-end space-x-4">
+                    <button
+                      onClick={() => setIsDeleteBoxOpen(false)}
+                      disabled={isDeleting}
+                      className="px-4 py-2 border border-gray-300 
                 hover:bg-gray-100 transition-colors 
                 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={handleConfirmDelete}
-                        disabled={isDeleting}
-                        className="px-4 py-2 bg-red-500 text-white 
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleConfirmDelete}
+                      disabled={isDeleting}
+                      className="px-4 py-2 bg-red-500 text-white 
                 hover:bg-red-600 transition-colors 
                 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isDeleting ? "Deleting..." : "Delete"}
-                      </button>
-                    </div>
+                    >
+                      {isDeleting ? "Deleting..." : "Delete"}
+                    </button>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              <button
-                onClick={handleEditClick}
-                className="px-6 py-3 
+            <button
+              onClick={handleEditClick}
+              className="px-6 py-3 
           bg-primary text-white text-base sm:text-lg 
           hover:bg-primary/90 transition-all duration-500 ease-out
           flex items-center justify-center gap-2
           shadow-md hover:shadow-lg active:translate-y-0.5"
-              >
-                <span className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-10 transition-opacity"></span>
-                <EditIcon className="mr-2" size={20} />
-                Edit
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="bg-white mt-20">
-        <h1 className="text-2xl md:text-3xl font-bold max-lg:text-center text-gray-800 mb-4">
-          Where you'll be
-        </h1>
-        <ShowMap
-          locationCoordinates={listing.geometry.coordinates}
-          locationName={listing.title}
-          locationImage={listing.image.url}
-        />
+            >
+              <span className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-10 transition-opacity"></span>
+              <EditIcon className="mr-2" size={20} />
+              Edit
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Reviews Section */}
@@ -215,12 +207,15 @@ const ShowListing = () => {
           <LeaveReview listingId={listing._id} />
         </div>
 
-        <div className="bg-white my-24">
-          <h1 className="text-2xl md:text-3xl font-bold max-lg:text-center text-gray-800 mb-4">
-            All Reviews ({listing.reviews.length})
-          </h1>
-          <AllReviews listingId={listing._id} />
-        </div>
+        <LazyLoadWrapper>
+          {/* children */}
+          <div className="bg-white my-24">
+            <h1 className="text-2xl md:text-3xl font-bold max-lg:text-center text-gray-800 mb-4">
+              All Reviews ({listing.reviews.length})
+            </h1>
+            <AllReviews listingId={listing._id} />
+          </div>
+        </LazyLoadWrapper>
       </div>
     </div>
   );
