@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CheckCircle2Icon } from "lucide-react";
 import ShowListingNotFound from "../ErrorPages/ShowListingNotFound";
-import LazyLoadWrapper from "../components/wrappers/lazyLoadWrapper";
+import LazyLoadWrapper from "../components/wrappers/LazyLoadWrapper";
 import ListingDetails from "../components/ListingDetails";
 
 const ShowListing = () => {
