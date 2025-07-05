@@ -10,7 +10,7 @@
       <img src="./client/public/1.png" alt="Landing-Page">
       <img src="./client/public/2.png" alt="sign-up">
       <img src="./client/public/3.png" alt="log-in">
-      <img src="./client/public/4.png" alt="user-account">
+      <img src="./client/public/4.PNG" alt="user-account">
       <img src="./client/public/5.png" alt="show-Listing">
   <br />
 </div>
